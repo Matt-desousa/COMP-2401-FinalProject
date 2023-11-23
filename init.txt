@@ -1,0 +1,41 @@
+initHunter(houseType*, int equipment) - initialize the hunters
+
+hunterHandler - Handles the hunters loop and actions performed{
+
+    while the hunters arent afraid or arent bored or house->hunting = 0{
+        randomly choose one of the following:
+        1. Call hunter move
+        2. Call hunter collect
+        3. Call hunter review{
+            if true, break;
+        }
+    }
+    house->hunting = 0
+    exit()
+}
+
+hunterMove - Pick a random connecting room to move to
+hunterCollect - Collects the evidence if any was left by the ghost. If the huner's equipment matched the evidence, collect the evidence
+hunterReview - Checks for 3 evidence, if 3 evidence have been found return true, else return false.
+
+exit - Cleans up allocated memory of a thread and exits the threads.
+
+
+initGhost(houseType*) - initialize the ghost
+
+ghostHandler - Handles the ghost loop and actions performed{
+
+    while the ghost isnt bored or house->hunting = 0{
+        randomly choose one of the following:
+        1. Do nothing
+        2. Call leave evidence
+        3. Call ghost move
+    }
+    house->hunting = 0
+    exit()
+}
+
+ghostMove - Pick a random connecting room to move to. If a hunter is in the room, either leave evidence or do nothing.
+leaveEvidence - Leave a random evidence from the ghosts evidence array.
+
+
