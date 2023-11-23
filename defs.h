@@ -24,6 +24,60 @@ enum EvidenceType { EMF, TEMPERATURE, FINGERPRINTS, SOUND, EV_COUNT, EV_UNKNOWN 
 enum GhostClass { POLTERGEIST, BANSHEE, BULLIES, PHANTOM, GHOST_COUNT, GH_UNKNOWN };
 enum LoggerDetails { LOG_FEAR, LOG_BORED, LOG_EVIDENCE, LOG_SUFFICIENT, LOG_INSUFFICIENT, LOG_UNKNOWN };
 
+// OUR CHANGES
+// structures
+typedef struct Evidence {
+    EvidenceType type;
+    sem_t semaphore; 
+} Evidence;
+
+typedef struct RoomNode {
+    struct Room* room;
+    struct RoomNode* next;
+} RoomNode;
+
+typedef struct Room {
+    char name[MAX_STRING];
+    RoomNode* room_connections; // linked list of connected rooms
+    EvidenceNode* evidence_list; // linked list of evidence in the room
+    struct Hunter* hunters_in_room[]; // collection of hunters in the room
+    struct Ghost* ghost_in_room; // pointer to the ghost in the room or NULL
+    sem_t semaphore; 
+} Room;
+
+typedef struct House {
+    struct Hunter* hunters; // collection of all hunters
+    RoomNode* all_rooms; // linked list of all rooms
+    EvidenceNode* shared_evidence_list; // shared evidence list for all hunters
+    int hunting; // 
+} House;
+
+typedef struct Ghost {
+    GhostClass ghost_type;
+    Room* current_room;
+    int boredom_timer;
+    sem_t semaphore; 
+} Ghost;
+
+typedef struct Hunter {
+    Room* curr_room;
+    EvidenceType evidence_type;
+    char name[MAX_STRING];
+    EvidenceNode* shared_evidence_list;
+    int fear;
+    int boredom;
+} Hunter;
+
+typedef struct EvidenceNode {
+    Evidence* evidence;
+    struct EvidenceNode* next;
+} EvidenceNode;
+
+// function prototypes
+void connectRooms(Room* room1, Room* room2);
+void populateRooms(House* house);
+// END OF OUR CHANGES (this is just here so that you know what we were given and what was added)
+
 // Helper Utilies
 int randInt(int,int);        // Pseudo-random number generator function
 float randFloat(float, float);  // Pseudo-random float generator function
