@@ -37,7 +37,7 @@ typedef struct RoomNode {
 } RoomNode;
 
 typedef struct Room {
-    char name[MAX_STRING];
+    char name[MAX_STR];
     RoomNode* room_connections; // linked list of connected rooms
     EvidenceNode* evidence_list; // linked list of evidence in the room
     struct Hunter* hunters_in_room[]; // collection of hunters in the room
@@ -62,7 +62,7 @@ typedef struct Ghost {
 typedef struct Hunter {
     Room* curr_room;
     EvidenceType evidence_type;
-    char name[MAX_STRING];
+    char name[MAX_STR];
     EvidenceNode* shared_evidence_list;
     int fear;
     int boredom;
