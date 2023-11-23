@@ -1,7 +1,7 @@
 #include "defs.h"
 
 // function to initialize hunter
-Hunter* initializeHunter(char* name, EvidenceType evidenceType, Room* startingRoom, EvidenceNode* sharedEvidenceList) {
+Hunter* initHunter(char* name, EvidenceType evidenceType, Room* startingRoom, EvidenceNode* sharedEvidenceList) {
     Hunter* newHunter = (Hunter*)malloc(sizeof(Hunter)); // allocate memory for the new hunter
 
     // maybe here we can have some if statements to take care of cases when some parameters might be NULL but we can save that for the end when we have the basic stuff done
