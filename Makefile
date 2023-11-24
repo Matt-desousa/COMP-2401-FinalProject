@@ -1,20 +1,19 @@
 TARGETS=main house logger utils defs
 
-all:		${TARGETS}
+all: 	${TARGETS}
+		gcc -o finalProkject main.o house.o logger.o utils.o
 
+main:	main.c defs.h
+		gcc -c main.c
 
+house:	house.c defs.h
+		gcc -c house.c
 
-main:	main.c
-		gcc -pthread -o p1 p1-prime.c -lm
+logger: logger.c defs.h
+		gcc -c logger.c
 
-house:	house.c
-		gcc -g -pthread -o p2 p2-fruits.c
-
-logger:
-
-utils:
-
-defs:
+utils: utils.c defs.h
+		gcc -c utils.c
 
 clean:
-			rm -f ${TARGETS}
+		rm -f ${TARGETS}

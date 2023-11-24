@@ -10,19 +10,19 @@ void populateRooms(HouseType* house) {
 
     // createRoom assumes that we dynamically allocate a room, initializes the values, and returns a RoomType*
     // create functions are pretty typical, but it means errors are harder to return aside from NULL
-    struct Room* van                = createRoom("Van");
-    struct Room* hallway            = createRoom("Hallway");
-    struct Room* master_bedroom     = createRoom("Master Bedroom");
-    struct Room* boys_bedroom       = createRoom("Boy's Bedroom");
-    struct Room* bathroom           = createRoom("Bathroom");
-    struct Room* basement           = createRoom("Basement");
-    struct Room* basement_hallway   = createRoom("Basement Hallway");
-    struct Room* right_storage_room = createRoom("Right Storage Room");
-    struct Room* left_storage_room  = createRoom("Left Storage Room");
-    struct Room* kitchen            = createRoom("Kitchen");
-    struct Room* living_room        = createRoom("Living Room");
-    struct Room* garage             = createRoom("Garage");
-    struct Room* utility_room       = createRoom("Utility Room");
+    struct RoomType* van                = createRoom("Van");
+    struct RoomType* hallway            = createRoom("Hallway");
+    struct RoomType* master_bedroom     = createRoom("Master Bedroom");
+    struct RoomType* boys_bedroom       = createRoom("Boy's Bedroom");
+    struct RoomType* bathroom           = createRoom("Bathroom");
+    struct RoomType* basement           = createRoom("Basement");
+    struct RoomType* basement_hallway   = createRoom("Basement Hallway");
+    struct RoomType* right_storage_room = createRoom("Right Storage Room");
+    struct RoomType* left_storage_room  = createRoom("Left Storage Room");
+    struct RoomType* kitchen            = createRoom("Kitchen");
+    struct RoomType* living_room        = createRoom("Living Room");
+    struct RoomType* garage             = createRoom("Garage");
+    struct RoomType* utility_room       = createRoom("Utility Room");
 
     // This adds each room to each other's room lists
     // All rooms are two-way connections
