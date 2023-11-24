@@ -24,6 +24,17 @@ enum EvidenceType { EMF, TEMPERATURE, FINGERPRINTS, SOUND, EV_COUNT, EV_UNKNOWN 
 enum GhostClass { POLTERGEIST, BANSHEE, BULLIES, PHANTOM, GHOST_COUNT, GH_UNKNOWN };
 enum LoggerDetails { LOG_FEAR, LOG_BORED, LOG_EVIDENCE, LOG_SUFFICIENT, LOG_INSUFFICIENT, LOG_UNKNOWN };
 
+typedef struct EvidenceNode EvidenceNode;
+typedef struct EvidenceList EvidenceList;
+typedef struct RoomNode RoomNode;
+typedef struct RoomList RoomList;
+typedef struct RoomType RoomType;
+typedef struct GhostType GhostType;
+typedef struct HunterNode HunterNode;
+typedef struct HunterList HunterList;
+typedef struct HunterType HunterType;
+typedef struct HouseType HouseType;
+
 // Structure Definitions
 
 /*
@@ -33,10 +44,10 @@ enum LoggerDetails { LOG_FEAR, LOG_BORED, LOG_EVIDENCE, LOG_SUFFICIENT, LOG_INSU
             EvidenceType data - type of evidence
             EvidenceNode* next - pointer to next node
 */
-typedef struct EvidenceNode {
+struct EvidenceNode {
     EvidenceType data;
     struct EvidenceNode* next;
-} EvidenceNode;
+};
 
 /*
   Struct:   Evidence List
@@ -46,11 +57,37 @@ typedef struct EvidenceNode {
             EvidenceNode* tail - pointer to tail node
             int size - size of list
 */
-typedef struct {
+struct EvidenceList{
     EvidenceNode* head;
     EvidenceNode* tail;
     int size;
-} EvidenceList;
+};
+
+/*
+  Struct:   Room Node
+  Purpose:  Linked list node for rooms
+  Variables: 
+            RoomType* data - pointer to the room data
+            RoomNode* next - pointer to next node
+*/
+struct RoomNode{
+    RoomType* data; // Pointer to the room data
+    struct RoomNode* next; // Linked list of connected rooms
+};
+
+/*
+  Struct:   Room List
+  Purpose:  Linked list of rooms
+  Variables: 
+            RoomNode* head - pointer to head node
+            RoomNode* tail - pointer to tail node
+            int size - size of list
+*/
+struct RoomList{
+    RoomNode* head;
+    RoomNode* tail;
+    int size;
+};
 
 /*
   Struct:   Room Type
@@ -62,53 +99,13 @@ typedef struct {
             HunterList* hunters_in_room - collection of hunters in the room
             GhostType* ghost_in_room - pointer to the ghost in the room or NULL
 */
-typedef struct {
-    char name[MAX_STR]; // Name of the room
-    RoomList* connected_rooms; // Linked list of connected rooms
-    EvidenceList* evidence_left; // linked list of evidence in the room
-    HunterList* hunters_in_room; // collection of hunters in the room
-    GhostType* ghost_in_room; // pointer to the ghost in the room or NULL
-} RoomType;
-
-/*
-  Struct:   Room Node
-  Purpose:  Linked list node for rooms
-  Variables: 
-            RoomType* data - pointer to the room data
-            RoomNode* next - pointer to next node
-*/
-typedef struct {
-    RoomType* data; // Pointer to the room data
-    struct RoomNode* next; // Linked list of connected rooms
-} RoomNode;
-
-/*
-  Struct:   Room List
-  Purpose:  Linked list of rooms
-  Variables: 
-            RoomNode* head - pointer to head node
-            RoomNode* tail - pointer to tail node
-            int size - size of list
-*/
-typedef struct {
-    RoomNode* head;
-    RoomNode* tail;
-    int size;
-} RoomList;
-
-/*
-  Struct:   House Type
-  Purpose:  Struct to hold house data
-  Variables: 
-            HunterType hunters[NUM_HUNTERS] - array of hunters
-            RoomList* rooms - pointer to the map/rooms list
-            EvidenceList* evidence_list - pointer to the list of evidence the hunters have collected
-*/
-typedef struct{
-    HunterType hunters[NUM_HUNTERS];
-    RoomList* rooms;
-    EvidenceList* evidence_list;
-} HouseType;
+struct RoomType{
+    char name[MAX_STR];
+    RoomList* connected_rooms;
+    EvidenceList* evidence_left;
+    HunterList* hunters_in_room;
+    GhostType* ghost_in_room;
+};
 
 /*
   Struct:   Ghost Type
@@ -118,11 +115,37 @@ typedef struct{
             RoomType* current_room - pointer to current room
             int boredom_timer - boredom level
 */
-typedef struct Ghost {
+struct GhostType{
     GhostClass ghost_type;
     RoomType* current_room;
     int boredom;
-} GhostType;
+};
+
+/*
+  Struct:   Hunter Node
+  Purpose:  Linked list node for hunters
+  Variables: 
+            HunterType* data - pointer to the hunter data
+            HunterNode* next - pointer to next node
+*/
+struct HunterNode{
+    HunterType* data;
+    struct HunterNode* next;
+};
+
+/*
+  Struct:   Hunter List
+  Purpose:  Linked list of hunters
+  Variables: 
+            HunterNode* head - pointer to head node
+            HunterNode* tail - pointer to tail node
+            int size - size of list/number of hunters
+*/
+struct HunterList{
+    HunterNode* head;
+    HunterNode* tail;
+    int size;
+};
 
 /*
   Struct:   Hunter Type
@@ -135,44 +158,46 @@ typedef struct Ghost {
             int fear - fear level
             int boredom - boredom level
 */
-typedef struct {
+struct HunterType{
     RoomType* curr_room;
     EvidenceType evidence_type;
     char name[MAX_STR];
     EvidenceList* evidence_list;
     int fear;
     int boredom;
-} HunterType;
+};
 
 /*
-  Struct:   Hunter Node
-  Purpose:  Linked list node for hunters
+  Struct:   House Type
+  Purpose:  Struct to hold house data
   Variables: 
-            HunterType* data - pointer to the hunter data
-            HunterNode* next - pointer to next node
+            HunterType hunters[NUM_HUNTERS] - array of hunters
+            RoomList* rooms - pointer to the map/rooms list
+            EvidenceList* evidence_list - pointer to the list of evidence the hunters have collected
 */
-typedef struct HunterNode{
-    HunterType* data;
-    struct HunterNode* next;
-} HunterNode;
-
-/*
-  Struct:   Hunter List
-  Purpose:  Linked list of hunters
-  Variables: 
-            HunterNode* head - pointer to head node
-            HunterNode* tail - pointer to tail node
-            int size - size of list/number of hunters
-*/
-typedef struct {
-    HunterNode* head;
-    HunterNode* tail;
-    int size;
-} HunterList;
+struct HouseType{
+    HunterType hunters[NUM_HUNTERS];
+    RoomList rooms;
+    EvidenceList evidence_list;
+};
 
 // ************************ //
 // Room Function Prototypes //
 // ************************ //
+/* 
+  Function: Initialize Room List
+  Purpose:  Initializes a room list
+  Params:   
+    Input/Output: RoomList* list - pointer to the room list
+*/
+void initRoomList(RoomList* list);
+/* 
+  Function: Initialize Room
+  Purpose:  Initializes a room
+  Params:   
+    Input/Output: RoomType* room - pointer to the room to initialize
+*/
+void initRoom(RoomType** room, char* name);
 /* 
   Function: Create Room
   Purpose:  Initializes a room and returns a pointer to it
@@ -198,6 +223,24 @@ void addRoom(RoomList* list, RoomType* room);
 */
 void connectRooms(RoomType* room1, RoomType* room2);
 
+// ************************* //
+// House Function Prototypes //
+// ************************* //
+/* 
+  Function: Initialize House
+  Purpose:  Initializes a house
+  Params:   
+    Input/Output: HouseType* house - pointer to the house to initialize
+*/
+void initHouse(HouseType* house);
+/* 
+  Function: Populate Rooms
+  Purpose:  Dynamically allocates several rooms and populates the provided house.
+  Params:   
+    Input/Output: HouseType* house - pointer to the house to populate
+*/
+void populateRooms(HouseType* house);
+
 // ************************** //
 // Hunter Function Prototypes //
 // ************************** //
@@ -206,6 +249,18 @@ void hunterHandler(HunterType*);
 void hunterMove(HunterType*, RoomType*);
 void hunterCollect(HunterType*, EvidenceType);
 void hunterReview(HunterType*);
+
+// **************************** //
+// Evidence Function Prototypes //
+// **************************** //
+/* 
+  Function: Initialize Evidence List
+  Purpose:  Initializes an evidence list
+  Params:   
+    Input/Output:
+            EvidenceList* list - pointer to the evidence list to initialize
+*/
+void initEvidenceList(EvidenceList* list);
 
 // Helper Utilies
 int randInt(int,int);        // Pseudo-random number generator function
@@ -225,7 +280,6 @@ void l_ghostMove(char* room);
 void l_ghostEvidence(enum EvidenceType evidence, char* room);
 void l_ghostExit(enum LoggerDetails reason);
 
-
 // copyable comments cuz im lazy
 /*
   Struct:   
@@ -240,3 +294,11 @@ void l_ghostExit(enum LoggerDetails reason);
     Output:
     Input/Output:
 */
+
+// Function for testing, not to be submitted
+
+// Function to print the house. Currently not to be submitted.
+void printHouse(HouseType* house);
+
+// Function to print a room. Currently not to be submitted.
+void printRoom(RoomType* room);

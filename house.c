@@ -1,5 +1,10 @@
 #include "defs.h"
 
+void initHouse(HouseType* house) {
+    initRoomList(&house->rooms);
+    initEvidenceList(&house->evidence_list);
+}
+
 /*
     Dynamically allocates several rooms and populates the provided house.
     Note: You may modify this as long as room names and connections are maintained.
@@ -53,4 +58,12 @@ void populateRooms(HouseType* house) {
     addRoom(&house->rooms, living_room);
     addRoom(&house->rooms, garage);
     addRoom(&house->rooms, utility_room);
+}
+
+void printHouse(HouseType* house) {
+    RoomNode* curr = house->rooms.head;
+    while (curr != NULL) {
+        printRoom(curr->data);
+        curr = curr->next;
+    }
 }

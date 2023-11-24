@@ -37,5 +37,3 @@ ghostHandler - Handles the ghost loop and actions performed{
 
 ghostMove - Pick a random connecting room to move to. If a hunter is in the room, either leave evidence or do nothing.
 leaveEvidence - Leave a random evidence from the ghosts evidence array.
-
-

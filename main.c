@@ -9,6 +9,7 @@ int main()
     initHouse(&house);
     populateRooms(&house);
 
+    printHouse(&house);
     return 0;
 }
 
