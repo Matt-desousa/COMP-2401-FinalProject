@@ -244,9 +244,23 @@ void populateRooms(HouseType* house);
 // ************************** //
 // Hunter Function Prototypes //
 // ************************** //
+/* 
+  Function: initHunter
+  Purpose:  initialize a hunter
+  Params:   
+    Input/Output: HunterType* newHunter
+*/
 void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList* sharedEvidenceList, HunterType* newHunter);
+
 void hunterHandler(HunterType*);
-void hunterMove(HunterType*, RoomType*);
+
+/* 
+  Function: hunterMove
+  Purpose:  one of the random actions of hunter; moving from room to room
+  Params: HunterType* hunter, RoomType* room  
+    Input: HunterType* hunter, RoomType* room
+*/
+void hunterMove(HunterType* hunter, RoomType* room);
 void hunterCollect(HunterType*, EvidenceType);
 void hunterReview(HunterType*);
 
