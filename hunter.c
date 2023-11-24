@@ -17,3 +17,22 @@
 //     // log the initialization
 //     l_hunterInit(newHunter->name, newHunter->evidence_type);
 // }
+
+void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList* sharedEvidenceList, HunterType* newHunter) {
+    
+    printf("Enter hunter%d's name: ", evidenceType+1);
+    fgets(newHunter->name, MAX_STR, stdin);
+    newHunter->name[strlen(newHunter->name) - 1] = 0;
+    
+    newHunter->curr_room = startingRoom;
+    newHunter->evidence_type = evidenceType;
+    newHunter->evidence_list = sharedEvidenceList;
+    newHunter->fear = 0;
+    newHunter->boredom = 0;
+
+    // printf("Hunter %d initialized, welcome %s\n", evidenceType+1, newHunter->name);
+}
+
+void printHunter(HunterType* hunter) {
+    printf("Hunter %s is in the %s and has equipment %d.\n", hunter->name, hunter->curr_room->name, hunter->evidence_type);
+}

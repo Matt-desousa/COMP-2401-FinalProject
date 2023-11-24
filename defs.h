@@ -244,7 +244,7 @@ void populateRooms(HouseType* house);
 // ************************** //
 // Hunter Function Prototypes //
 // ************************** //
-void initHunter(HunterType*, EvidenceType);
+void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList* sharedEvidenceList, HunterType* newHunter);
 void hunterHandler(HunterType*);
 void hunterMove(HunterType*, RoomType*);
 void hunterCollect(HunterType*, EvidenceType);
@@ -302,3 +302,6 @@ void printHouse(HouseType* house);
 
 // Function to print a room. Currently not to be submitted.
 void printRoom(RoomType* room);
+
+void printEvidenceList(EvidenceList* list);
+void printHunter(HunterType* hunter);

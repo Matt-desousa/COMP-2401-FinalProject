@@ -1,7 +1,7 @@
 TARGETS=main house logger utils
 
-all: 	defs.h main.c house.c logger.c utils.c room.c evidence.c
-		gcc -o fp main.c house.c logger.c utils.c room.c evidence.c
+all: 	defs.h main.c house.c logger.c utils.c room.c evidence.c hunter.c
+		gcc -o fp main.c house.c logger.c utils.c room.c evidence.c hunter.c
 
 # main:	main.c defs.h
 # 		gcc -c main.c

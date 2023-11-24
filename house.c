@@ -61,6 +61,12 @@ void populateRooms(HouseType* house) {
 }
 
 void printHouse(HouseType* house) {
+    for (int i = 0; i < NUM_HUNTERS; i++) {
+        printHunter(&house->hunters[i]);
+    }
+
+    printEvidenceList(&house->evidence_list);
+
     RoomNode* curr = house->rooms.head;
     while (curr != NULL) {
         printRoom(curr->data);
