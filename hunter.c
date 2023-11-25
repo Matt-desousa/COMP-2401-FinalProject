@@ -42,14 +42,14 @@ void printHunter(HunterType* hunter) {
     in: hunter 
     in: rooms (room data)
 */
-void hunterMove(HunterType* hunter, RoomType* curr_room) {
-    RoomList* connected = curr_room->connected_rooms; // get list of connected rooms
+void hunterMove(HunterType* hunter, RoomType* current_room) {
+    RoomList* connected = current_room->connected_rooms; // get list of connected rooms
 
     // maybe add a semaphore (since there are multiple hunters that will be using this function) here but i still havent figured that out...
     
     // if there are no connected rooms, the hunter stays in the curr room
     if (connected->size == 0) {
-        l_hunterMove(hunter->name, curr_room->name);
+        l_hunterMove(hunter->name, current_room->name);
         return;
     }
 
@@ -62,11 +62,11 @@ void hunterMove(HunterType* hunter, RoomType* curr_room) {
         curr_node = curr_node->next;
     }
 
-    // update the hunter's curr room
+    // update the hunter's current room
     hunter->curr_room = curr_node->data;
 
     // update the hunter collection in the curr room
-    removeHunterFromRoom(currRoom, hunter);
+    removeHunterFromRoom(current_room, hunter);
     addHunterToRoom(hunter->curr_room, hunter);
 
     // logging hunter movement
