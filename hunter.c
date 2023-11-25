@@ -39,8 +39,8 @@ void printHunter(HunterType* hunter) {
 
 /*
     function for hunter movement 
-    in: hunter 
-    in: rooms (room data)
+    in: hunter thats moving
+    in: current room (room data)
 */
 void hunterMove(HunterType* hunter, RoomType* current_room) {
     RoomList* connected = current_room->connected_rooms; // get list of connected rooms
