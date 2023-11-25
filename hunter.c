@@ -45,7 +45,7 @@ void printHunter(HunterType* hunter) {
 void hunterMove(HunterType* hunter, RoomType* current_room) {
     RoomList* connected = current_room->connected_rooms; // get list of connected rooms
 
-    // maybe add a semaphore (since there are multiple hunters that will be using this function) here but i still havent figured that out...
+    // add a semaphore (since there are multiple hunters that will be using this function) here but i still havent figured that out...
     
     // if there are no connected rooms, the hunter stays in the curr room
     if (connected->size == 0) {
@@ -57,7 +57,7 @@ void hunterMove(HunterType* hunter, RoomType* current_room) {
     int rand_index = randInt(0, connected->size); // from utils.c
     RoomNode* curr_node = connected->head; // first node in the room connections linked list (start from head)
 
-    // traverse room connections list until you reach random index
+    // traverse room connections list until you reach random index (the random room)
     for (int i = 0; i < rand_index; i++) {
         curr_node = curr_node->next;
     }
