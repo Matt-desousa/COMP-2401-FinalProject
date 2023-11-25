@@ -120,3 +120,62 @@ void removeHunterFromRoom(RoomType* room, HunterType* hunter) {
         room->hunters_in_room->size--; // decrement size
     }
 }
+
+void hunterCollect(HunterType* hunter, EvidenceType detectionType) {
+    RoomType* current_room = hunter->curr_room;
+
+    // check if the current room has evidence
+    if (current_room->evidence_left->size > 0) {
+        // Iterate through the evidence in the room
+        EvidenceNode* curr_evidence = current_room->evidence_left->head;
+        EvidenceNode* prev_evidence = NULL;
+
+        while (curr_evidence != NULL) {
+            // check if the evidence matches the hunter's detection type
+            if (curr_evidence->data == detectionType) {
+                // remove the evidence from the room's evidence collection
+                if (prev_evidence == NULL) {
+                    // the evidence to be removed is at the head of the list
+                    current_room->evidence_left->head = curr_evidence->next;
+                    if (current_room->evidence_left->head == NULL) {
+                        // if the list is now empty then update the tail
+                        current_room->evidence_left->tail = NULL;
+                    }
+                } else {
+                    // the evidence to be removed is in the middle or at the end of the list
+                    prev_evidence->next = curr_evidence->next;
+                    if (prev_evidence->next == NULL) {
+                        // if the removed evidence was at the tail then update the tail
+                        current_room->evidence_left->tail = prev_evidence;
+                    }
+                }
+
+                // add the evidence to the shared evidence collection for all hunters
+                EvidenceNode* newEvidenceNode = malloc(sizeof(EvidenceNode));
+                newEvidenceNode->data = curr_evidence->data;
+                newEvidenceNode->next = hunter->evidence_list->head;
+                hunter->evidence_list->head = newEvidenceNode;
+                if (hunter->evidence_list->tail == NULL) {
+                    // if the list was empty, update the tail
+                    hunter->evidence_list->tail = newEvidenceNode;
+                }
+
+                hunter->evidence_list->size++; // increment list size
+
+                free(curr_evidence);
+
+                // log the event...
+                l_hunterCollect(hunter->name, detectionType, current_room->name);
+
+                return;
+            }
+
+            // move to the next evidence node
+            prev_evidence = curr_evidence;
+            curr_evidence = curr_evidence->next;
+        }
+    }
+
+    // log the event even if no evidence is found
+    l_hunterCollect(hunter->name, EV_UNKNOWN, current_room->name);
+}
