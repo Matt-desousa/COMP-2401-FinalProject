@@ -260,7 +260,10 @@ void hunterHandler(HunterType*);
   Params: HunterType* hunter, RoomType* room  
     Input: HunterType* hunter, RoomType* room
 */
-void hunterMove(HunterType* hunter, RoomType* room);
+void hunterMove(HunterType* hunter, RoomType* curr_room);
+void addHunterToRoom(RoomType* room, HunterType* hunter); // helper for hunterMove
+void removeHunterFromRoom(RoomType* room, HunterType* hunter); // helper for hunterMove
+
 void hunterCollect(HunterType*, EvidenceType);
 void hunterReview(HunterType*);
 
