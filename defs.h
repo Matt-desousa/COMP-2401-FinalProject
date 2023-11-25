@@ -255,7 +255,7 @@ void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList*
 void hunterHandler(HunterType*);
 
 /* 
-  Function: hunterMove
+  Function: hunter moving
   Purpose:  one of the random actions of a hunter; moving from room to room
   Params: HunterType* hunter, RoomType* room  
     Input: HunterType* hunter, RoomType* room
@@ -265,14 +265,21 @@ void addHunterToRoom(RoomType* room, HunterType* hunter); // helper for hunterMo
 void removeHunterFromRoom(RoomType* room, HunterType* hunter); // helper for hunterMove
 
 /* 
-  Function: hunterCollect
+  Function: hunter collecting evidence
   Purpose:  one of the random actions of a hunter; collecting evidence in a room
+  Params:   
+    Input: HunterType* hunter, EvidenceType detection_type
+*/
+void hunterCollect(HunterType* hunter, EvidenceType detection_type);
+
+/* 
+  Function: hunter reviewing evidence
+  Purpose: hunter reviewing the evidence they have gathered, if any 
   Params:   
     Input:
     Output:
     Input/Output:
 */
-void hunterCollect(HunterType*, EvidenceType);
 void hunterReview(HunterType*);
 
 // **************************** //
