@@ -1,7 +1,7 @@
 #include "defs.h"
 
 int main() {
-    printf("%d\n", sizeof(RoomNode));
+    printf("%d\n", sizeof(HunterType));
     // Initialize the random number generator
     srand(time(NULL));
 
@@ -15,9 +15,9 @@ int main() {
     initGhost(&ghost, getRandomRoom(&(house.rooms)));
 
     // Initialize hunters
-    // for(int i = 0; i < NUM_HUNTERS; i++) {
-    //     initHunter(house.rooms.head->data, i, &house.evidence_list, &house.hunters[i]);
-    // }
+    for(int i = 0; i < NUM_HUNTERS; i++) {
+        initHunter(house.rooms.head->data, i, &house.evidence_list, &house.hunters[i]);
+    }
 
     cleanupHouse(&house);
     cleanupGhost(ghost);
