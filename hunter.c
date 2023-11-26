@@ -111,6 +111,11 @@ void removeHunterFromRoom(RoomType* room, HunterType* hunter) {
     }
 }
 
+/*
+    function for hunter collecting evidence
+    in: hunter thats collecting evidence
+    in: evidence type that hunter is assigned to collect
+*/
 void hunterCollect(HunterType* hunter, EvidenceType detectionType) {
     RoomType* current_room = hunter->curr_room;
 
