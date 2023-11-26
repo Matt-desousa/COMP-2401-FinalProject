@@ -5,11 +5,6 @@ void initHouse(HouseType* house) {
     initEvidenceList(&house->evidence_list);
 }
 
-/*
-    Dynamically allocates several rooms and populates the provided house.
-    Note: You may modify this as long as room names and connections are maintained.
-        out: house - the house to populate with rooms. Assumes house has been initialized.
-*/
 void populateRooms(HouseType* house) {
     // First, create each room
 
@@ -72,4 +67,12 @@ void printHouse(HouseType* house) {
         printRoom(curr->data);
         curr = curr->next;
     }
+}
+
+void cleanupHouse(HouseType* house) {
+    cleanupRoomList(&house->rooms);
+    cleanupEvidenceList(&house->evidence_list);
+    // for (int i = 0; i < NUM_HUNTERS; i++) {
+    //     cleanupHunter(&house->hunters[i]);
+    // }
 }

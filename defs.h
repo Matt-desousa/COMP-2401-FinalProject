@@ -17,6 +17,9 @@
 #define FEAR_MAX        10
 #define LOGGING         C_TRUE
 
+// Number of rooms in the house
+#define NUM_ROOMS       13
+
 typedef enum EvidenceType EvidenceType;
 typedef enum GhostClass GhostClass;
 
@@ -45,8 +48,8 @@ typedef struct HouseType HouseType;
             EvidenceNode* next - pointer to next node
 */
 struct EvidenceNode {
-    EvidenceType data;
-    struct EvidenceNode* next;
+  EvidenceType data;
+  struct EvidenceNode* next;
 };
 
 /*
@@ -58,9 +61,9 @@ struct EvidenceNode {
             int size - size of list
 */
 struct EvidenceList{
-    EvidenceNode* head;
-    EvidenceNode* tail;
-    int size;
+  EvidenceNode* head;
+  EvidenceNode* tail;
+  int size;
 };
 
 /*
@@ -71,8 +74,8 @@ struct EvidenceList{
             RoomNode* next - pointer to next node
 */
 struct RoomNode{
-    RoomType* data; // Pointer to the room data
-    struct RoomNode* next; // Linked list of connected rooms
+  RoomType* data; // Pointer to the room data
+  struct RoomNode* next; // Linked list of connected rooms
 };
 
 /*
@@ -84,9 +87,9 @@ struct RoomNode{
             int size - size of list
 */
 struct RoomList{
-    RoomNode* head;
-    RoomNode* tail;
-    int size;
+  RoomNode* head;
+  RoomNode* tail;
+  int size;
 };
 
 /*
@@ -100,11 +103,11 @@ struct RoomList{
             GhostType* ghost_in_room - pointer to the ghost in the room or NULL
 */
 struct RoomType{
-    char name[MAX_STR];
-    RoomList* connected_rooms;
-    EvidenceList* evidence_left;
-    HunterList* hunters_in_room;
-    GhostType* ghost_in_room;
+  char name[MAX_STR];
+  RoomList* connected_rooms;
+  EvidenceList* evidence_in_room;
+  HunterList* hunters_in_room;
+  GhostType* ghost_in_room;
 };
 
 /*
@@ -116,9 +119,10 @@ struct RoomType{
             int boredom_timer - boredom level
 */
 struct GhostType{
-    GhostClass ghost_type;
-    RoomType* curr_room;
-    int boredom;
+  GhostClass ghost_class;
+  RoomType* curr_room;
+  EvidenceList evidence_list;
+  int boredom;
 };
 
 /*
@@ -129,8 +133,8 @@ struct GhostType{
             HunterNode* next - pointer to next node
 */
 struct HunterNode{
-    HunterType* data;
-    struct HunterNode* next;
+  HunterType* data;
+  struct HunterNode* next;
 };
 
 /*
@@ -142,9 +146,9 @@ struct HunterNode{
             int size - size of list/number of hunters
 */
 struct HunterList{
-    HunterNode* head;
-    HunterNode* tail;
-    int size;
+  HunterNode* head;
+  HunterNode* tail;
+  int size;
 };
 
 /*
@@ -159,12 +163,12 @@ struct HunterList{
             int boredom - boredom level
 */
 struct HunterType{
-    RoomType* curr_room;
-    EvidenceType evidence_type;
-    char name[MAX_STR];
-    EvidenceList* evidence_list;
-    int fear;
-    int boredom;
+  RoomType* curr_room;
+  EvidenceType evidence_type;
+  char name[MAX_STR];
+  EvidenceList* evidence_list;
+  int fear;
+  int boredom;
 };
 
 /*
@@ -176,9 +180,9 @@ struct HunterType{
             EvidenceList* evidence_list - pointer to the list of evidence the hunters have collected
 */
 struct HouseType{
-    HunterType hunters[NUM_HUNTERS];
-    RoomList rooms;
-    EvidenceList evidence_list;
+  HunterType hunters[NUM_HUNTERS];
+  RoomList rooms;
+  EvidenceList evidence_list;
 };
 
 // ************************ //
@@ -222,6 +226,23 @@ void addRoom(RoomList* list, RoomType* room);
                   RoomType* room2 - pointer to room2, room connected to room1
 */
 void connectRooms(RoomType* room1, RoomType* room2);
+/* 
+  Function: Get Random Room
+  Purpose:  Returns a random room from the room list
+  Params:   
+    Input:  RoomList* rooms - pointer to the room list
+    Return: RoomType* - pointer to the random room
+*/
+RoomType* getRandomRoom(RoomList* rooms);
+/* 
+  Function: Cleanup Room List
+  Purpose:  Free all memory associated with a room list
+  Params:   
+    Input:  RoomList* list - pointer to the room list to free
+*/
+void cleanupRoomList(RoomList* list);
+
+
 
 // ************************* //
 // House Function Prototypes //
@@ -240,6 +261,15 @@ void initHouse(HouseType* house);
     Input/Output: HouseType* house - pointer to the house to populate
 */
 void populateRooms(HouseType* house);
+/* 
+  Function: Cleanup House
+  Purpose:  Free all memory associated with a house
+  Params:   
+    Input:  HouseType* house - pointer to the house to free
+*/
+void cleanupHouse(HouseType* house);
+
+
 
 // ************************** //
 // Hunter Function Prototypes //
@@ -251,7 +281,7 @@ void populateRooms(HouseType* house);
     Input/Output: HunterType* newHunter
 */
 void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList* sharedEvidenceList, HunterType* newHunter);
-
+void initHunterList(HunterList* list);
 void hunterHandler(HunterType*);
 
 /* 
@@ -281,6 +311,44 @@ void hunterCollect(HunterType* hunter, EvidenceType detection_type);
     Input/Output:
 */
 void hunterReview(HunterType*);
+/*
+  Function: Cleanup Hunter
+  Purpose:  Free all memory associated with a hunter
+  Params:   
+    Input:  HunterType* hunter - pointer to the hunter to free
+*/
+void cleanupHunter(HunterType* hunter);
+
+
+
+
+// ************************* //
+// Ghost Function Prototypes //
+// ************************* //
+/* 
+  Function: Initialize Ghost
+  Purpose:  Initializes a ghost
+  Params:   
+    Input/Output: GhostType* ghost - pointer to the ghost to initialize
+*/
+void initGhost(GhostType** ghost, RoomType* startingRoom);
+/* 
+  Function: Ghost Move
+  Purpose:  Moves a ghost to a random connected room
+  Params:   
+    Input:  GhostType* ghost - pointer to the ghost to move
+*/
+void ghostMove(GhostType* ghost);
+/* 
+  Function: Leave Evidence
+  Purpose:  Leaves evidence in the current room
+  Params:   
+    Input:  GhostType* ghost - pointer to the ghost to leave evidence
+*/
+void leaveEvidence(GhostType* ghost);
+
+
+
 
 // **************************** //
 // Evidence Function Prototypes //
@@ -293,6 +361,35 @@ void hunterReview(HunterType*);
             EvidenceList* list - pointer to the evidence list to initialize
 */
 void initEvidenceList(EvidenceList* list);
+/* 
+  Function: Initialize Ghost Evidence List
+  Purpose:  Returns an evidence list based on the ghost type
+  Params:   
+    Input:  GhostClass ghost - the type of ghost
+    Output: EvidenceList* evidence - pointer to the evidence list to initialize
+*/
+void initGhostEvidenceList(EvidenceList* evidence, GhostClass ghost);
+/* 
+  Function: Random Evidence
+  Purpose:  Returns a random evidence type from the ghost's evidence list
+  Params:   
+    Input:  EvidenceList* evidence_list - pointer to the ghost's evidence list
+    Return: EvidenceType - random evidence type
+*/
+EvidenceType getrRandomEvidence(EvidenceList* evidence_list);
+/* 
+  Function: Cleanup Evidence List
+  Purpose:  Free all memory associated with an evidence list
+  Params:   
+    Input:  EvidenceList* list - pointer to the evidence list to free
+*/
+void cleanupEvidenceList(EvidenceList* list);
+
+
+
+
+
+
 
 // Helper Utilies
 int randInt(int,int);        // Pseudo-random number generator function

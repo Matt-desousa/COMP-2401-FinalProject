@@ -1,25 +1,8 @@
 #include "defs.h"
 
-// // function to initialize hunter
-// void initHunter(char* name, EvidenceType evidenceType, RoomType* startingRoom, EvidenceNode* sharedEvidenceList) {
-//     HunterType* newHunter = (HunterType*)malloc(sizeof(HunterType)); // allocate memory for the new hunter
-
-//     // maybe here we can have some if statements to take care of cases when some parameters might be NULL but we can save that for the end when we have the basic stuff done
-
-//     // initial values for the hunter
-//     strncpy(newHunter->name, name, MAX_STR - 1);  // copy the name??
-//     newHunter->evidence_type = evidenceType;
-//     newHunter->curr_room = startingRoom; // placeholder because the startingRoom for a hunter should be the van
-//     newHunter->evidence_list = sharedEvidenceList;
-//     newHunter->fear = 0; // fear when they start hunting is initially 0
-//     newHunter->boredom = 0; // boredom when they start hunting is initially 0
-
-//     // log the initialization
-//     l_hunterInit(newHunter->name, newHunter->evidence_type);
-// }
-
 void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList* sharedEvidenceList, HunterType* newHunter) {
-    
+    newHunter = malloc(sizeof(HunterType));
+
     printf("Enter hunter%d's name: ", evidenceType+1);
     fgets(newHunter->name, MAX_STR, stdin);
     newHunter->name[strlen(newHunter->name) - 1] = 0;
@@ -30,7 +13,13 @@ void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList*
     newHunter->fear = 0;
     newHunter->boredom = 0;
 
-    // printf("Hunter %d initialized, welcome %s\n", evidenceType+1, newHunter->name);
+    l_hunterInit(newHunter->name, newHunter->evidence_type);
+}
+
+void initHunterList(HunterList* list) {
+    list->head = NULL;
+    list->tail = NULL;
+    list->size = 0;
 }
 
 void printHunter(HunterType* hunter) {
@@ -125,9 +114,9 @@ void hunterCollect(HunterType* hunter, EvidenceType detectionType) {
     RoomType* current_room = hunter->curr_room;
 
     // check if the current room has evidence
-    if (current_room->evidence_left->size > 0) {
+    if (current_room->evidence_in_room->size > 0) {
         // Iterate through the evidence in the room
-        EvidenceNode* curr_evidence = current_room->evidence_left->head;
+        EvidenceNode* curr_evidence = current_room->evidence_in_room->head;
         EvidenceNode* prev_evidence = NULL;
 
         while (curr_evidence != NULL) {
@@ -136,17 +125,17 @@ void hunterCollect(HunterType* hunter, EvidenceType detectionType) {
                 // remove the evidence from the room's evidence collection
                 if (prev_evidence == NULL) {
                     // the evidence to be removed is at the head of the list
-                    current_room->evidence_left->head = curr_evidence->next;
-                    if (current_room->evidence_left->head == NULL) {
+                    current_room->evidence_in_room->head = curr_evidence->next;
+                    if (current_room->evidence_in_room->head == NULL) {
                         // if the list is now empty then update the tail
-                        current_room->evidence_left->tail = NULL;
+                        current_room->evidence_in_room->tail = NULL;
                     }
                 } else {
                     // the evidence to be removed is in the middle or at the end of the list
                     prev_evidence->next = curr_evidence->next;
                     if (prev_evidence->next == NULL) {
                         // if the removed evidence was at the tail then update the tail
-                        current_room->evidence_left->tail = prev_evidence;
+                        current_room->evidence_in_room->tail = prev_evidence;
                     }
                 }
 
@@ -178,4 +167,8 @@ void hunterCollect(HunterType* hunter, EvidenceType detectionType) {
 
     // log the event even if no evidence is found
     l_hunterCollect(hunter->name, EV_UNKNOWN, current_room->name);
+}
+
+void cleanupHunter(HunterType* hunter) {
+    free(hunter);
 }
