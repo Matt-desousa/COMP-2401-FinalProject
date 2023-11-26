@@ -1,7 +1,7 @@
 #include "defs.h"
 
 void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList* sharedEvidenceList, HunterType* newHunter) {
-    newHunter = malloc(sizeof(HunterType));
+    *newHunter = malloc(sizeof(HunterType));
 
     printf("Enter hunter%d's name: ", evidenceType+1);
     fgets((newHunter)->name, MAX_STR, stdin);
