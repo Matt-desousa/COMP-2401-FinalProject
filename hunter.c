@@ -1,7 +1,9 @@
 #include "defs.h"
 
-void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList* sharedEvidenceList, HunterType* newHunter) {
-    *newHunter = malloc(sizeof(HunterType));
+void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList* sharedEvidenceList, HunterType** newHunterPtr) {
+    *newHunterPtr = malloc(sizeof(HunterType)); // allocate memory for the new hunter
+
+   HunterType* newHunter = *newHunterPtr; // access the newly allocated hunter using the double pointer ??
 
     printf("Enter hunter%d's name: ", evidenceType+1);
     fgets((newHunter)->name, MAX_STR, stdin);
