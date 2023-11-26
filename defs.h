@@ -33,7 +33,6 @@ typedef struct RoomNode RoomNode;
 typedef struct RoomList RoomList;
 typedef struct RoomType RoomType;
 typedef struct GhostType GhostType;
-typedef struct HunterNode HunterNode;
 typedef struct HunterType HunterType;
 typedef struct HouseType HouseType;
 
@@ -63,6 +62,26 @@ struct EvidenceList{
   EvidenceNode* head;
   EvidenceNode* tail;
   int size;
+};
+
+/*
+  Struct:   Hunter Type
+  Purpose:  Struct to hold hunter data
+  Variables: 
+            RoomType* curr_room - pointer to current room
+            EvidenceType evidence_type - type of evidence the hunter can collect
+            char name[MAX_STR] - name of the hunter
+            EvidenceList* evidence_list - pointer to the list of evidence the hunters have collected
+            int fear - fear level
+            int boredom - boredom level
+*/
+struct HunterType{
+  RoomType* curr_room;
+  EvidenceType evidence_type;
+  char name[MAX_STR];
+  EvidenceList* evidence_list;
+  int fear;
+  int boredom;
 };
 
 /*
@@ -123,38 +142,6 @@ struct GhostType{
   EvidenceList evidence_list;
   int boredom;
   pthread_t pid;
-};
-
-/*
-  Struct:   Hunter Node
-  Purpose:  Linked list node for hunters
-  Variables: 
-            HunterType* data - pointer to the hunter data
-            HunterNode* next - pointer to next node
-*/
-struct HunterNode{
-  HunterType* data;
-  struct HunterNode* next;
-};
-
-/*
-  Struct:   Hunter Type
-  Purpose:  Struct to hold hunter data
-  Variables: 
-            RoomType* curr_room - pointer to current room
-            EvidenceType evidence_type - type of evidence the hunter can collect
-            char name[MAX_STR] - name of the hunter
-            EvidenceList* evidence_list - pointer to the list of evidence the hunters have collected
-            int fear - fear level
-            int boredom - boredom level
-*/
-struct HunterType{
-  RoomType* curr_room;
-  EvidenceType evidence_type;
-  char name[MAX_STR];
-  EvidenceList* evidence_list;
-  int fear;
-  int boredom;
 };
 
 /*
