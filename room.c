@@ -68,17 +68,28 @@ void printRoom(RoomType* room) {
 }
 
 void cleanupRoom(RoomType* room) {
+    cleanupConnectedRoomList(room->connected_rooms);
     free(room->connected_rooms);
     free(room->evidence_in_room);
     free(room->hunters_in_room);
     free(room);
 }
 
+void cleanupConnectedRoomList(RoomList* list) {
+    RoomNode* curr = list->head;
+    RoomNode* next = NULL;
+    while (curr != NULL) {
+        next = curr->next;
+        free(curr);
+        curr = next;
+    }
+}
+
 void cleanupRoomList(RoomList* list) {
     RoomNode* curr = list->head;
     RoomNode* next = NULL;
     while (curr != NULL) {      
-        next = curr->next;  
+        next = curr->next;
         cleanupRoom(curr->data);
         free(curr);
         curr = next;
