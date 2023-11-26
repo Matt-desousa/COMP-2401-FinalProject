@@ -34,7 +34,6 @@ typedef struct RoomList RoomList;
 typedef struct RoomType RoomType;
 typedef struct GhostType GhostType;
 typedef struct HunterNode HunterNode;
-typedef struct HunterList HunterList;
 typedef struct HunterType HunterType;
 typedef struct HouseType HouseType;
 
