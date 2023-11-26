@@ -9,12 +9,15 @@ void initRoomList(RoomList* list) {
 void initRoom(RoomType** room, char* name) {
     *room = malloc(sizeof(RoomType));
     strcpy((*room)->name, name);
+
     (*room)->connected_rooms = malloc(sizeof(RoomList));
     initRoomList((*room)->connected_rooms);
+
     (*room)->evidence_in_room = malloc(sizeof(EvidenceList));
     initEvidenceList((*room)->evidence_in_room);
-    (*room)->hunters_in_room = malloc(sizeof(HunterList));
-    initHunterList((*room)->hunters_in_room);
+
+    (*room)->num_hunters = 0;
+
     (*room)->ghost_in_room = NULL;
 }
 
@@ -56,23 +59,13 @@ RoomType* getRandomRoom(RoomList* rooms) {
     return curr_node->data;
 }
 
-void printRoom(RoomType* room) {
-    printf("Room: %s\n", room->name);
-    printf("Connected Rooms: ");
-    RoomNode* curr = room->connected_rooms->head;
-    while (curr != NULL) {
-        printf("%s, ", curr->data->name);
-        curr = curr->next;
-    }
-    printf("\n");
-}
-
 void cleanupRoom(RoomType* room) {
     cleanupConnectedRoomList(room->connected_rooms);
     free(room->connected_rooms);
+
     cleanupEvidenceList(room->evidence_in_room);
     free(room->evidence_in_room);
-    free(room->hunters_in_room);
+
     free(room);
 }
 

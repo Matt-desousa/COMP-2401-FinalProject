@@ -4,20 +4,53 @@ void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList*
     newHunter = malloc(sizeof(HunterType));
 
     printf("Enter hunter%d's name: ", evidenceType+1);
-    fgets(newHunter->name, MAX_STR, stdin);
+    fgets((newHunter)->name, MAX_STR, stdin);
     newHunter->name[strlen(newHunter->name) - 1] = 0;
     
     newHunter->curr_room = startingRoom;
     newHunter->evidence_type = evidenceType;
     newHunter->evidence_list = sharedEvidenceList;
+
     newHunter->fear = 0;
     newHunter->boredom = 0;
 
     l_hunterInit(newHunter->name, newHunter->evidence_type);
 }
 
-void printHunter(HunterType* hunter) {
-    printf("Hunter %s is in the %s and has equipment %d.\n", hunter->name, hunter->curr_room->name, hunter->evidence_type);
+void hunterHandler(HunterType* hunter){
+    while (hunter->boredom < BOREDOM_MAX || hunter->fear < FEAR_MAX) {
+        if (hunter->curr_room->ghost_in_room != NULL) {
+            hunter->fear++;
+            hunter->boredom = 0;
+        }
+        else{
+            hunter->boredom++;
+        }
+        
+        int choice = randInt(0, 2);
+        switch (choice) {
+            case 0:
+                hunterMove(hunter, hunter->curr_room);
+                break;
+            case 1:
+                hunterCollect(hunter, hunter->evidence_type);
+                break;
+            case 2:
+                printf("hunter review\n"); // Placeholder
+                // hunterReview(hunter);
+                break;
+        }
+    }
+
+    if (hunter->fear >= FEAR_MAX) {
+        l_hunterExit(hunter->name, LOG_FEAR);
+    }
+    else if (hunter->boredom >= BOREDOM_MAX) {
+        l_hunterExit(hunter->name, LOG_BORED);
+    }
+    else {
+        l_hunterExit(hunter->name, LOG_EVIDENCE);
+    }
 }
 
 /*
@@ -62,6 +95,7 @@ void addHunterToRoom(RoomType* room, HunterType* hunter) {
     for (int i = 0; i < NUM_HUNTERS; i++) {
         if (room->hunters_in_room[i].curr_room == NULL) {
             room->hunters_in_room[i] = *hunter;
+            room->num_hunters++;
             return;
         }
     }
@@ -73,6 +107,7 @@ void removeHunterFromRoom(RoomType* room, HunterType* hunter) {
     for (int i = 0; i < NUM_HUNTERS; i++) {
         if (&room->hunters_in_room[i] == hunter) {
             room->hunters_in_room[i].curr_room = NULL;
+            room->num_hunters--;
             return;
         }
     }

@@ -16,13 +16,15 @@ int main() {
     initGhost(&ghost, getRandomRoom(&(house.rooms)));
 
     // Initialize hunters
-    // for(int i = 0; i < NUM_HUNTERS; i++) {
-    //     initHunter(house.rooms.head->data, i, &house.evidence_list, &house.hunters[i]);
-    // }
+    for(int i = 0; i < NUM_HUNTERS; i++) {
+        initHunter(house.rooms.head->data, i, &house.evidence_list, &house.hunters[i]);
+    }
 
     // Start the game
     ghostHandler(ghost);
     // pthread_create(ghost->pid, NULL, ghostHandler, ghost);
+
+    hunterHandler(&house.hunters[0]);
 
 
     // End the game

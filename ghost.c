@@ -14,11 +14,11 @@ void initGhost(GhostType** ghost, RoomType* startingRoom) {
 
 void ghostHandler(GhostType* ghost) {
     while (ghost->boredom < BOREDOM_MAX) {
-        if (ghost->curr_room->hunters_in_room->size > 0) {
+        if (ghost->curr_room->num_hunters > 0) {
             ghost->boredom = 0;
         }
         else{
-            ghost->boredom += 1;
+            ghost->boredom++;
         }
         
         int choice = randInt(0, 2);
@@ -47,7 +47,7 @@ void ghostMove(GhostType* ghost) {
         curr_node = curr_node->next;
     }
 
-    if (curr_node->data->hunters_in_room->size > 0) {
+    if (curr_node->data->num_hunters > 0) {
        // Do nothing.
        return;
     }

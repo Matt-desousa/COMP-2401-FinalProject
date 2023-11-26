@@ -93,52 +93,6 @@ struct RoomList{
 };
 
 /*
-  Struct:   Room Type
-  Purpose:  Struct to hold room data
-  Variables: 
-            char name[MAX_STR] - name of the room
-            RoomList* connected_rooms - linked list of connected rooms
-            EvidenceList* evidence_left - linked list of evidence in the room
-            HunterType hunters_in_room - collection of hunters in the room
-            GhostType* ghost_in_room - pointer to the ghost in the room or NULL
-*/
-struct RoomType{
-  char name[MAX_STR];
-  RoomList* connected_rooms;
-  EvidenceList* evidence_in_room;
-  HunterType hunters_in_room[NUM_HUNTERS];
-  GhostType* ghost_in_room;
-};
-
-/*
-  Struct:   Ghost Type
-  Purpose:  Struct to hold ghost data
-  Variables: 
-            GhostClass ghost_type - enum type of ghost
-            RoomType* current_room - pointer to current room
-            int boredom_timer - boredom level
-*/
-struct GhostType{
-  GhostClass ghost_class;
-  RoomType* curr_room;
-  EvidenceList evidence_list;
-  int boredom;
-  pthread_t pid;
-};
-
-/*
-  Struct:   Hunter Node
-  Purpose:  Linked list node for hunters
-  Variables: 
-            HunterType* data - pointer to the hunter data
-            HunterNode* next - pointer to next node
-*/
-struct HunterNode{
-  HunterType* data;
-  struct HunterNode* next;
-};
-
-/*
   Struct:   Hunter Type
   Purpose:  Struct to hold hunter data
   Variables: 
@@ -156,6 +110,41 @@ struct HunterType{
   EvidenceList* evidence_list;
   int fear;
   int boredom;
+};
+
+/*
+  Struct:   Room Type
+  Purpose:  Struct to hold room data
+  Variables: 
+            char name[MAX_STR] - name of the room
+            RoomList* connected_rooms - linked list of connected rooms
+            EvidenceList* evidence_left - linked list of evidence in the room
+            HunterType hunters_in_room - collection of hunters in the room
+            GhostType* ghost_in_room - pointer to the ghost in the room or NULL
+*/
+struct RoomType{
+  char name[MAX_STR];
+  RoomList* connected_rooms;
+  EvidenceList* evidence_in_room;
+  HunterType hunters_in_room[NUM_HUNTERS];
+  int num_hunters;
+  GhostType* ghost_in_room;
+};
+
+/*
+  Struct:   Ghost Type
+  Purpose:  Struct to hold ghost data
+  Variables: 
+            GhostClass ghost_type - enum type of ghost
+            RoomType* current_room - pointer to current room
+            int boredom_timer - boredom level
+*/
+struct GhostType{
+  GhostClass ghost_class;
+  RoomType* curr_room;
+  EvidenceList evidence_list;
+  int boredom;
+  pthread_t pid;
 };
 
 /*
@@ -282,7 +271,6 @@ void cleanupHouse(HouseType* house);
     Input/Output: HunterType* newHunter
 */
 void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList* sharedEvidenceList, HunterType* newHunter);
-void initHunterList(HunterList* list);
 void hunterHandler(HunterType*);
 
 /* 

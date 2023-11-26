@@ -55,24 +55,10 @@ void populateRooms(HouseType* house) {
     addRoom(&house->rooms, utility_room);
 }
 
-void printHouse(HouseType* house) {
-    for (int i = 0; i < NUM_HUNTERS; i++) {
-        printHunter(&house->hunters[i]);
-    }
-
-    printEvidenceList(&house->evidence_list);
-
-    RoomNode* curr = house->rooms.head;
-    while (curr != NULL) {
-        printRoom(curr->data);
-        curr = curr->next;
-    }
-}
-
 void cleanupHouse(HouseType* house) {
     cleanupRoomList(&house->rooms);
     cleanupEvidenceList(&house->evidence_list);
-    // for (int i = 0; i < NUM_HUNTERS; i++) {
-    //     cleanupHunter(&house->hunters[i]);
-    // }
+    for (int i = 0; i < NUM_HUNTERS; i++) {
+        cleanupHunter(&house->hunters[i]);
+    }
 }
