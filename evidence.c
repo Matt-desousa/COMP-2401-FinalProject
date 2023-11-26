@@ -6,6 +6,20 @@ void initEvidenceList(EvidenceList* list) {
     list->size = 0;
 }
 
+void initEvidenceNode(EvidenceType data, HunterType* hunter) {
+    EvidenceNode* newEvidenceNode = malloc(sizeof(EvidenceNode));
+    newEvidenceNode->data = data;
+    newEvidenceNode->next = hunter->evidence_list->head;
+    hunter->evidence_list->head = newEvidenceNode;
+
+    if (hunter->evidence_list->tail == NULL) {
+        // if the list was empty, update the tail
+        hunter->evidence_list->tail = newEvidenceNode;
+    }
+
+    hunter->evidence_list->size++; // increment list size
+}
+
 void initGhostEvidenceList(EvidenceList* evidence, GhostClass ghost) {
     initEvidenceList(evidence);
 
