@@ -99,14 +99,14 @@ struct RoomList{
             char name[MAX_STR] - name of the room
             RoomList* connected_rooms - linked list of connected rooms
             EvidenceList* evidence_left - linked list of evidence in the room
-            HunterList* hunters_in_room - collection of hunters in the room
+            HunterType hunters_in_room - collection of hunters in the room
             GhostType* ghost_in_room - pointer to the ghost in the room or NULL
 */
 struct RoomType{
   char name[MAX_STR];
   RoomList* connected_rooms;
   EvidenceList* evidence_in_room;
-  HunterList* hunters_in_room;
+  HunterType hunters_in_room[NUM_HUNTERS];
   GhostType* ghost_in_room;
 };
 
@@ -135,20 +135,6 @@ struct GhostType{
 struct HunterNode{
   HunterType* data;
   struct HunterNode* next;
-};
-
-/*
-  Struct:   Hunter List
-  Purpose:  Linked list of hunters
-  Variables: 
-            HunterNode* head - pointer to head node
-            HunterNode* tail - pointer to tail node
-            int size - size of list/number of hunters
-*/
-struct HunterList{
-  HunterNode* head;
-  HunterNode* tail;
-  int size;
 };
 
 /*
