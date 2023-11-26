@@ -49,7 +49,7 @@ void connectRooms(RoomType* room1, RoomType* room2) {
 }
 
 RoomType* getRandomRoom(RoomList* rooms) {
-    int rand_index = randInt(1, rooms->size);
+    int rand_index = randInt(0, rooms->size);
     RoomNode* curr_node = rooms->head;
 
     for (int i = 0; i < rand_index; i++) {
