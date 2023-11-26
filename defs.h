@@ -281,7 +281,6 @@ void cleanupHouse(HouseType* house);
     Input/Output: HunterType* newHunter
 */
 void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList* sharedEvidenceList, HunterType* newHunter);
-void initHunterList(HunterList* list);
 void hunterHandler(HunterType*);
 
 /* 
