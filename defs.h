@@ -159,6 +159,8 @@ struct HouseType{
   EvidenceList evidence_list;
 };
 
+
+
 // ************************ //
 // Room Function Prototypes //
 // ************************ //

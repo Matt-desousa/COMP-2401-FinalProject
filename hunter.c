@@ -1,10 +1,6 @@
 #include "defs.h"
 
-void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList* sharedEvidenceList, HunterType** newHunterPtr) {
-    *newHunterPtr = malloc(sizeof(HunterType)); // allocate memory for the new hunter
-
-   HunterType* newHunter = *newHunterPtr; // access the newly allocated hunter using the double pointer ??
-
+void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList* sharedEvidenceList, HunterType* newHunter) {
     printf("Enter hunter%d's name: ", evidenceType+1);
     fgets((newHunter)->name, MAX_STR, stdin);
     newHunter->name[strlen(newHunter->name) - 1] = 0;
@@ -20,7 +16,7 @@ void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList*
 }
 
 void hunterHandler(HunterType* hunter){
-    while (hunter->boredom < BOREDOM_MAX || hunter->fear < FEAR_MAX) {
+    while (hunter->boredom < BOREDOM_MAX && hunter->fear < FEAR_MAX) {
         if (hunter->curr_room->ghost_in_room != NULL) {
             hunter->fear++;
             hunter->boredom = 0;
@@ -171,8 +167,4 @@ void hunterCollect(HunterType* hunter, EvidenceType detectionType) {
 
     // log the event even if no evidence is found
     l_hunterCollect(hunter->name, EV_UNKNOWN, current_room->name);
-}
-
-void cleanupHunter(HunterType* hunter) {
-    free(hunter);
 }

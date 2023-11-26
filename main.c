@@ -26,7 +26,6 @@ int main() {
 
     hunterHandler(&house.hunters[0]);
 
-
     // End the game
     // pthread_join(ghost->pid, NULL);
 

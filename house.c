@@ -58,7 +58,4 @@ void populateRooms(HouseType* house) {
 void cleanupHouse(HouseType* house) {
     cleanupRoomList(&house->rooms);
     cleanupEvidenceList(&house->evidence_list);
-    for (int i = 0; i < NUM_HUNTERS; i++) {
-        cleanupHunter(&house->hunters[i]);
-    }
 }
