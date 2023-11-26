@@ -20,7 +20,7 @@ int main() {
     // }
 
     cleanupHouse(&house);
-    // cleanupGhost(ghost);
+    cleanupGhost(ghost);
 
     // printHouse(&house);
     return 0;
