@@ -117,7 +117,7 @@ struct RoomType{
 */
 struct GhostType{
     GhostClass ghost_type;
-    RoomType* current_room;
+    RoomType* curr_room;
     int boredom;
 };
 
