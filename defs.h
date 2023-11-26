@@ -356,6 +356,15 @@ void cleanupGhost(GhostType* ghost);
 // **************************** //
 // Evidence Function Prototypes //
 // **************************** //
+/*
+    Function: Initialize Evidence Node
+    Purpose:  Initializes an evidence node and adds it to the shared evidence collection for all hunters
+    Params:
+        Input:  EvidenceType data - type of evidence
+        Input:  HunterType* hunter - pointer to the hunter
+*/
+void initEvidenceNode(EvidenceType data, HunterType* hunter);
+
 /* 
   Function: Initialize Evidence List
   Purpose:  Initializes an evidence list
