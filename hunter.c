@@ -68,16 +68,10 @@ void hunterMove(HunterType* hunter, RoomType* current_room) {
     }
 
     // randomly select a connected room
-    int rand_index = randInt(0, connected->size); // from utils.c
-    RoomNode* curr_node = connected->head; // first node in the room connections linked list (start from head)
-
-    // traverse room connections list until you reach random index (the random room)
-    for (int i = 0; i < rand_index; i++) {
-        curr_node = curr_node->next;
-    }
+    RoomType* new_room = getRandomRoom(connected);
 
     // update the hunter's current room
-    hunter->curr_room = curr_node->data;
+    hunter->curr_room = new_room;
 
     // update the hunter collection in the curr room
     removeHunterFromRoom(current_room, hunter);
