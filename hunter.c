@@ -16,12 +16,6 @@ void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList*
     l_hunterInit(newHunter->name, newHunter->evidence_type);
 }
 
-void initHunterList(HunterList* list) {
-    list->head = NULL;
-    list->tail = NULL;
-    list->size = 0;
-}
-
 void printHunter(HunterType* hunter) {
     printf("Hunter %s is in the %s and has equipment %d.\n", hunter->name, hunter->curr_room->name, hunter->evidence_type);
 }
@@ -62,51 +56,25 @@ void hunterMove(HunterType* hunter, RoomType* current_room) {
     l_hunterMove(hunter->name, hunter->curr_room->name);
 }
 
-// helper function to add hunter to curr room (updating the hunters collection)
+// helper function to add hunter (for hunterMove function)
 void addHunterToRoom(RoomType* room, HunterType* hunter) {
-    HunterNode* new_hunter = malloc(sizeof(HunterNode)); // allocate memory for the new hunter 
-    new_hunter->data = hunter;
-    new_hunter->next = NULL;
-
-    if (room->hunters_in_room->head == NULL) {
-        room->hunters_in_room->head = new_hunter;
-        room->hunters_in_room->tail = new_hunter;
-    } else {
-        room->hunters_in_room->tail->next = new_hunter;
-        room->hunters_in_room->tail = new_hunter;
+    // find an empty slot in the array and add the hunter
+    for (int i = 0; i < NUM_HUNTERS; i++) {
+        if (room->hunters_in_room[i].curr_room == NULL) {
+            room->hunters_in_room[i] = *hunter;
+            return;
+        }
     }
-
-    room->hunters_in_room->size++;
 }
 
-// helper function to remove hunter from curr room (updating the hunters collection)
+// helper function to remove hunter (for hunterMove function)
 void removeHunterFromRoom(RoomType* room, HunterType* hunter) {
-    HunterNode* curr = room->hunters_in_room->head; // start (head) for traversing hunters collection
-    HunterNode* prev = NULL; // set a previous node since there could be cases where we need to remove hunter nodes that are in the middle of the linked list
-
-    // traverse collection and find hunter to be removed 
-    while (curr != NULL && curr->data != hunter) {
-        prev = curr;
-        curr = curr->next;
-    }
-
-    if (curr != NULL) {
-        if (prev == NULL) {
-            // hunter to remove is at the head of the list
-            room->hunters_in_room->head = curr->next;
-            if (room->hunters_in_room->head == NULL) {
-                room->hunters_in_room->tail = NULL;
-            }
-        } else {
-            // hunter to remove is in the middle or at the end of the list
-            prev->next = curr->next;
-            if (prev->next == NULL) {
-                room->hunters_in_room->tail = prev;
-            }
+    // find the hunter in the array and clear the slot
+    for (int i = 0; i < NUM_HUNTERS; i++) {
+        if (&room->hunters_in_room[i] == hunter) {
+            room->hunters_in_room[i].curr_room = NULL;
+            return;
         }
-
-        free(curr); // still not 100% sure if we only free the curr node or we also free the curr node data
-        room->hunters_in_room->size--; // decrement size
     }
 }
 
@@ -115,7 +83,6 @@ void hunterCollect(HunterType* hunter, EvidenceType detectionType) {
 
     // check if the current room has evidence
     if (current_room->evidence_in_room->size > 0) {
-        // Iterate through the evidence in the room
         EvidenceNode* curr_evidence = current_room->evidence_in_room->head;
         EvidenceNode* prev_evidence = NULL;
 
