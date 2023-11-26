@@ -123,6 +123,7 @@ struct GhostType{
   RoomType* curr_room;
   EvidenceList evidence_list;
   int boredom;
+  pthread_t pid;
 };
 
 /*
@@ -220,6 +221,20 @@ void connectRooms(RoomType* room1, RoomType* room2);
     Return: RoomType* - pointer to the random room
 */
 RoomType* getRandomRoom(RoomList* rooms);
+/* 
+  Function: Cleanup Connected Room List
+  Purpose:  Free all nodes of a room list, leaving the data alone.
+  Params:   
+    Input:  RoomList* list - pointer to the connected room list to free
+*/
+void cleanupConnectedRoomList(RoomList* list);
+/* 
+  Function: Cleanup Room
+  Purpose:  Free all memory associated with a room
+  Params:   
+    Input:  RoomType* room - pointer to the room to free
+*/
+void cleanupRoom(RoomType* room);
 /* 
   Function: Cleanup Room List
   Purpose:  Free all memory associated with a room list
@@ -319,6 +334,13 @@ void cleanupHunter(HunterType* hunter);
 */
 void initGhost(GhostType** ghost, RoomType* startingRoom);
 /* 
+  Function: Ghost Handler
+  Purpose:  Handles the ghost's actions
+  Params:   
+    Input:  GhostType* ghost - pointer to the ghost to handle
+*/
+void ghostHandler(GhostType* ghost);
+/* 
   Function: Ghost Move
   Purpose:  Moves a ghost to a random connected room
   Params:   
@@ -332,6 +354,13 @@ void ghostMove(GhostType* ghost);
     Input:  GhostType* ghost - pointer to the ghost to leave evidence
 */
 void leaveEvidence(GhostType* ghost);
+/* 
+  Function: Cleanup Ghost
+  Purpose:  Free all memory associated with a ghost
+  Params:   
+    Input:  GhostType* ghost - pointer to the ghost to free
+*/
+void cleanupGhost(GhostType* ghost);
 
 
 
@@ -356,13 +385,21 @@ void initEvidenceList(EvidenceList* list);
 */
 void initGhostEvidenceList(EvidenceList* evidence, GhostClass ghost);
 /* 
+  Function: Add Evidence
+  Purpose:  Adds an evidence type to the evidence list
+  Params:   
+    Input:  EvidenceType evidence - the evidence type to add
+    Output: EvidenceList* list - pointer to the evidence list to add to
+*/
+void addEvidence(EvidenceList* list, EvidenceType evidence);
+/* 
   Function: Random Evidence
   Purpose:  Returns a random evidence type from the ghost's evidence list
   Params:   
     Input:  EvidenceList* evidence_list - pointer to the ghost's evidence list
     Return: EvidenceType - random evidence type
 */
-EvidenceType getrRandomEvidence(EvidenceList* evidence_list);
+EvidenceType getRandomEvidence(EvidenceList* evidence_list);
 /* 
   Function: Cleanup Evidence List
   Purpose:  Free all memory associated with an evidence list

@@ -1,7 +1,8 @@
 #include "defs.h"
+#include <pthread.h>
 
 int main() {
-    printf("%d\n", sizeof(HunterType));
+    // printf("%d\n", sizeof(HunterType));
     // Initialize the random number generator
     srand(time(NULL));
 
@@ -15,10 +16,19 @@ int main() {
     initGhost(&ghost, getRandomRoom(&(house.rooms)));
 
     // Initialize hunters
-    for(int i = 0; i < NUM_HUNTERS; i++) {
-        initHunter(house.rooms.head->data, i, &house.evidence_list, &house.hunters[i]);
-    }
+    // for(int i = 0; i < NUM_HUNTERS; i++) {
+    //     initHunter(house.rooms.head->data, i, &house.evidence_list, &house.hunters[i]);
+    // }
 
+    // Start the game
+    ghostHandler(ghost);
+    // pthread_create(ghost->pid, NULL, ghostHandler, ghost);
+
+
+    // End the game
+    // pthread_join(ghost->pid, NULL);
+
+    // Cleanup memory
     cleanupHouse(&house);
     cleanupGhost(ghost);
 

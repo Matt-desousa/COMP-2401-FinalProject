@@ -4,15 +4,37 @@ void initGhost(GhostType** ghost, RoomType* startingRoom) {
     *ghost = malloc(sizeof(GhostType));
     (*ghost)->ghost_class = randomGhost();
     (*ghost)->curr_room = startingRoom;
+    (*ghost)->curr_room->ghost_in_room = *ghost;
     initGhostEvidenceList(&(*ghost)->evidence_list, (*ghost)->ghost_class);
     (*ghost)->boredom = 0;
+    (*ghost)->pid = 0;
 
     l_ghostInit((*ghost)->ghost_class, (*ghost)->curr_room->name);
 }
 
 void ghostHandler(GhostType* ghost) {
-
-
+    while (ghost->boredom < BOREDOM_MAX) {
+        if (ghost->curr_room->hunters_in_room->size > 0) {
+            ghost->boredom = 0;
+        }
+        else{
+            ghost->boredom += 1;
+        }
+        
+        int choice = randInt(0, 2);
+        switch (choice) {
+            case 0:
+                ghostMove(ghost);
+                break;
+            case 1:
+                leaveEvidence(ghost);
+                break;
+            case 2:
+                // Do nothing.
+                break;
+        }
+    }
+    l_ghostExit(LOG_BORED);
 }
 
 void ghostMove(GhostType* ghost) {
@@ -23,6 +45,11 @@ void ghostMove(GhostType* ghost) {
 
     for (int i = 0; i < rand_index; i++) {
         curr_node = curr_node->next;
+    }
+
+    if (curr_node->data->hunters_in_room->size > 0) {
+       // Do nothing.
+       return;
     }
 
     ghost->curr_room->ghost_in_room = NULL;
@@ -46,6 +73,8 @@ void leaveEvidence(GhostType* ghost) {
     }
 
     ghost->curr_room->evidence_in_room->size++;
+
+    l_ghostEvidence(new_evidence->data, ghost->curr_room->name);
 }
 
 void cleanupGhost(GhostType* ghost) {

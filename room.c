@@ -70,6 +70,7 @@ void printRoom(RoomType* room) {
 void cleanupRoom(RoomType* room) {
     cleanupConnectedRoomList(room->connected_rooms);
     free(room->connected_rooms);
+    cleanupEvidenceList(room->evidence_in_room);
     free(room->evidence_in_room);
     free(room->hunters_in_room);
     free(room);
