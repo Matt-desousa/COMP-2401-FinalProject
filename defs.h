@@ -295,21 +295,9 @@ void hunterCollect(HunterType* hunter, EvidenceType detection_type);
   Function: hunter reviewing evidence
   Purpose: hunter reviewing the evidence they have gathered, if any 
   Params:   
-    Input:
-    Output:
-    Input/Output:
+    Input: HunterType* hunter
 */
-void hunterReview(HunterType*);
-/*
-  Function: Cleanup Hunter
-  Purpose:  Free all memory associated with a hunter
-  Params:   
-    Input:  HunterType* hunter - pointer to the hunter to free
-*/
-void cleanupHunter(HunterType* hunter);
-
-
-
+void hunterReview(HunterType* hunter);
 
 // ************************* //
 // Ghost Function Prototypes //
