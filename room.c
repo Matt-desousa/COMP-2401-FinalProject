@@ -18,6 +18,10 @@ void initRoom(RoomType** room, char* name) {
 
     (*room)->num_hunters = 0;
 
+    for (int i = 0; i < NUM_HUNTERS; i++) {
+        (*room)->hunters_in_room[i].curr_room = NULL;
+    }
+
     (*room)->ghost_in_room = NULL;
 }
 
