@@ -1,5 +1,12 @@
 #include "defs.h"
 
+/*
+    function for hunter initializing a hunter
+    in: starting room
+    in: evidence type that theyre assigned to collect
+    in: shared evidence list
+    in: the hunter themself 
+*/
 void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList* sharedEvidenceList, HunterType* newHunter) {
     printf("Enter hunter%d's name: ", evidenceType+1);
     fgets((newHunter)->name, MAX_STR, stdin);
@@ -15,6 +22,10 @@ void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList*
     l_hunterInit(newHunter->name, newHunter->evidence_type);
 }
 
+/*
+    function for handling the actions of a hunter
+    in: hunter thats either moving, collecting, or reviewing
+*/
 void hunterHandler(HunterType* hunter){
     while (hunter->boredom < BOREDOM_MAX && hunter->fear < FEAR_MAX) {
         if (hunter->curr_room->ghost_in_room != NULL) {
@@ -25,7 +36,7 @@ void hunterHandler(HunterType* hunter){
             hunter->boredom++;
         }
         
-        int choice = randInt(0, 2);
+        int choice = randInt(0, 3); // not inclusive so max is 3
         switch (choice) {
             case 0:
                 hunterMove(hunter, hunter->curr_room);
@@ -34,8 +45,7 @@ void hunterHandler(HunterType* hunter){
                 hunterCollect(hunter, hunter->evidence_type);
                 break;
             case 2:
-                printf("hunter review\n"); // Placeholder
-                // hunterReview(hunter);
+                hunterReview(hunter);
                 break;
         }
     }
@@ -157,4 +167,46 @@ void hunterCollect(HunterType* hunter, EvidenceType detectionType) {
 
     // log the event even if no evidence is found
     l_hunterCollect(hunter->name, EV_UNKNOWN, current_room->name);
+}
+
+/*
+    function for hunter reviewing evidence
+    in: hunter thats collecting evidence
+*/
+void hunterReview(HunterType* hunter) {
+    EvidenceList* sharedEvidenceList = hunter->evidence_list;
+    EvidenceType uniqueEvidenceTypes[3] = {EV_UNKNOWN, EV_UNKNOWN, EV_UNKNOWN}; // store the unique evidence types here for checking
+    int uniqueEvidenceCount = 0;
+
+    // iterate through shared evidence list
+    EvidenceNode* currentEvidence = sharedEvidenceList->head;
+    while (currentEvidence != NULL && uniqueEvidenceCount < 3) {
+        EvidenceType currentType = currentEvidence->data;
+
+        // check if the evidence type is already in the uniqueEvidenceTypes array
+        int alreadyExists = C_FALSE;
+        for (int i = 0; i < uniqueEvidenceCount; i++) {
+            if (uniqueEvidenceTypes[i] == currentType) {
+                alreadyExists = C_TRUE;
+                break;
+            }
+        }
+
+        // if not then add it to the array
+        if (!alreadyExists) {
+            uniqueEvidenceTypes[uniqueEvidenceCount++] = currentType;
+        }
+
+        currentEvidence = currentEvidence->next;
+    }
+
+    // check if there are at least three unique evidence types
+    if (uniqueEvidenceCount >= 3) {
+        // log the event and exit...
+        l_hunterReview(hunter->name, LOG_SUFFICIENT);
+        l_hunterExit(hunter->name, LOG_SUFFICIENT);
+    } else {
+        // log the event...
+        l_hunterReview(hunter->name, LOG_INSUFFICIENT);
+    }
 }
