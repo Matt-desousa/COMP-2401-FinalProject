@@ -24,7 +24,9 @@ int main() {
     ghostHandler(ghost);
     // pthread_create(ghost->pid, NULL, ghostHandler, ghost);
 
-    hunterHandler(&house.hunters[0]);
+    for (int i = 0; i < NUM_HUNTERS; i ++) {
+        hunterHandler(&house.hunters[i]);
+    } 
 
     // End the game
     // pthread_join(ghost->pid, NULL);
