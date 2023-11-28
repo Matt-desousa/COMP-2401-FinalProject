@@ -31,7 +31,7 @@ void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList*
     in: hunter thats either moving, collecting, or reviewing
 */
 void *hunterHandler(void* arg){
-    HunterType* hunter = (HunterType*) arg;    
+    HunterType* hunter = (HunterType*) arg;
     while (hunter->boredom < BOREDOM_MAX && hunter->fear < FEAR_MAX) {
         sem_post(&mutex);
 

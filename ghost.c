@@ -48,20 +48,15 @@ void *ghostHandler(void* arg) {
 void ghostMove(GhostType* ghost) {
     RoomList* connected = ghost->curr_room->connected_rooms;
 
-    int rand_index = randInt(0, connected->size);
-    RoomNode* curr_node = connected->head;
+    RoomType* room = getRandomRoom(connected, 0);
 
-    for (int i = 0; i < rand_index; i++) {
-        curr_node = curr_node->next;
-    }
-
-    if (curr_node->data->num_hunters > 0) {
+    if (room->num_hunters > 0) {
        // Do nothing.
        return;
     }
 
     ghost->curr_room->ghost_in_room = NULL;
-    ghost->curr_room = curr_node->data;
+    ghost->curr_room = room;
     ghost->curr_room->ghost_in_room = ghost;
 
     printf("\033[0m"); 

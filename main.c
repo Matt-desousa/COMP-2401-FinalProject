@@ -2,7 +2,6 @@
 #include <pthread.h>
 
 int main() {
-    // printf("%d\n", sizeof(HunterType));
     // Initialize the random number generator
     srand(time(NULL));
 
@@ -21,8 +20,6 @@ int main() {
     }
 
     // Start the game
-    // ghostHandler(ghost);
-    // pthread_create(ghost->pid, NULL, ghostHandler, ghost);
 
     if (sem_init(&mutex, 0, 1) < 0) {
         printf("semaphore initialization error\n");
