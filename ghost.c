@@ -1,4 +1,6 @@
 #include "defs.h"
+#include <pthread.h>
+#include <semaphore.h>
 
 void initGhost(GhostType** ghost, RoomType* startingRoom) {
     *ghost = malloc(sizeof(GhostType));
@@ -12,8 +14,11 @@ void initGhost(GhostType** ghost, RoomType* startingRoom) {
     l_ghostInit((*ghost)->ghost_class, (*ghost)->curr_room->name);
 }
 
-void ghostHandler(GhostType* ghost) {
+void *ghostHandler(void* arg) {
+    GhostType* ghost = (GhostType*) arg;
     while (ghost->boredom < BOREDOM_MAX) {
+        sem_post(&mutex);
+           
         if (ghost->curr_room->num_hunters > 0) {
             ghost->boredom = 0;
         }
@@ -21,7 +26,7 @@ void ghostHandler(GhostType* ghost) {
             ghost->boredom++;
         }
         
-        int choice = randInt(0, 2);
+        int choice = randInt(0, 3);
         switch (choice) {
             case 0:
                 ghostMove(ghost);
@@ -33,7 +38,10 @@ void ghostHandler(GhostType* ghost) {
                 // Do nothing.
                 break;
         }
+        sleep(1);
+        sem_wait(&mutex);
     }
+    printf("\033[0m"); 
     l_ghostExit(LOG_BORED);
 }
 
@@ -56,6 +64,7 @@ void ghostMove(GhostType* ghost) {
     ghost->curr_room = curr_node->data;
     ghost->curr_room->ghost_in_room = ghost;
 
+    printf("\033[0m"); 
     l_ghostMove(ghost->curr_room->name);
 }
 
@@ -74,6 +83,8 @@ void leaveEvidence(GhostType* ghost) {
 
     ghost->curr_room->evidence_in_room->size++;
 
+    printf("\033[0m");
+    // printEvidenceList(ghost->curr_room->evidence_in_room);
     l_ghostEvidence(new_evidence->data, ghost->curr_room->name);
 }
 

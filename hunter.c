@@ -1,4 +1,6 @@
 #include "defs.h"
+#include <pthread.h>
+#include <semaphore.h>
 
 /*
     function for hunter initializing a hunter
@@ -8,7 +10,9 @@
     in: the hunter themself 
 */
 void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList* sharedEvidenceList, HunterType* newHunter) {
-    printf("Enter hunter%d's name: ", evidenceType+1);
+    sprintf(newHunter->color, "\033[3%dm", evidenceType+1);
+
+    printf("%sEnter hunter%d's name: ", newHunter->color, evidenceType+1);
     fgets((newHunter)->name, MAX_STR, stdin);
     newHunter->name[strlen(newHunter->name) - 1] = 0;
     
@@ -26,8 +30,11 @@ void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList*
     function for handling the actions of a hunter
     in: hunter thats either moving, collecting, or reviewing
 */
-void hunterHandler(HunterType* hunter){
+void *hunterHandler(void* arg){
+    HunterType* hunter = (HunterType*) arg;    
     while (hunter->boredom < BOREDOM_MAX && hunter->fear < FEAR_MAX) {
+        sem_post(&mutex);
+
         if (hunter->curr_room->ghost_in_room != NULL) {
             hunter->fear++;
             hunter->boredom = 0;
@@ -48,17 +55,10 @@ void hunterHandler(HunterType* hunter){
                 hunterReview(hunter);
                 break;
         }
+        sleep(1);
+        sem_wait(&mutex);
     }
-
-    if (hunter->fear >= FEAR_MAX) {
-        l_hunterExit(hunter->name, LOG_FEAR);
-    }
-    else if (hunter->boredom >= BOREDOM_MAX) {
-        l_hunterExit(hunter->name, LOG_BORED);
-    }
-    else {
-        l_hunterExit(hunter->name, LOG_EVIDENCE);
-    }
+    hunterExit(hunter);
 }
 
 /*
@@ -78,7 +78,7 @@ void hunterMove(HunterType* hunter, RoomType* current_room) {
     }
 
     // randomly select a connected room
-    RoomType* new_room = getRandomRoom(connected);
+    RoomType* new_room = getRandomRoom(connected, 0);
 
     // update the hunter's current room
     hunter->curr_room = new_room;
@@ -87,6 +87,7 @@ void hunterMove(HunterType* hunter, RoomType* current_room) {
     removeHunterFromRoom(current_room, hunter);
     addHunterToRoom(hunter->curr_room, hunter);
 
+    printf("%s", hunter->color);
     // logging hunter movement
     l_hunterMove(hunter->name, hunter->curr_room->name);
 }
@@ -153,6 +154,7 @@ void hunterCollect(HunterType* hunter, EvidenceType detectionType) {
 
                 free(curr_evidence);
 
+                printf("%s", hunter->color);
                 // log the event...
                 l_hunterCollect(hunter->name, detectionType, current_room->name);
 
@@ -166,7 +168,7 @@ void hunterCollect(HunterType* hunter, EvidenceType detectionType) {
     }
 
     // log the event even if no evidence is found
-    l_hunterCollect(hunter->name, EV_UNKNOWN, current_room->name);
+    // l_hunterCollect(hunter->name, EV_UNKNOWN, current_room->name);
 }
 
 /*
@@ -174,6 +176,7 @@ void hunterCollect(HunterType* hunter, EvidenceType detectionType) {
     in: hunter thats collecting evidence
 */
 void hunterReview(HunterType* hunter) {
+    // printEvidenceList(hunter->evidence_list);
     EvidenceList* sharedEvidenceList = hunter->evidence_list;
     EvidenceType uniqueEvidenceTypes[3] = {EV_UNKNOWN, EV_UNKNOWN, EV_UNKNOWN}; // store the unique evidence types here for checking
     int uniqueEvidenceCount = 0;
@@ -201,6 +204,7 @@ void hunterReview(HunterType* hunter) {
     }
 
     // check if there are at least three unique evidence types
+    printf("%s", hunter->color);
     if (uniqueEvidenceCount >= 3) {
         // log the event and exit...
         l_hunterReview(hunter->name, LOG_SUFFICIENT);
@@ -208,5 +212,19 @@ void hunterReview(HunterType* hunter) {
     } else {
         // log the event...
         l_hunterReview(hunter->name, LOG_INSUFFICIENT);
+    }
+}
+
+void hunterExit (HunterType* hunter) {
+    removeHunterFromRoom(hunter->curr_room, hunter);
+    printf("%s", hunter->color);
+    if (hunter->fear >= FEAR_MAX) {
+        l_hunterExit(hunter->name, LOG_FEAR);
+    }
+    else if (hunter->boredom >= BOREDOM_MAX) {
+        l_hunterExit(hunter->name, LOG_BORED);
+    }
+    else {
+        l_hunterExit(hunter->name, LOG_EVIDENCE);
     }
 }

@@ -78,7 +78,6 @@ void l_hunterCollect(char* hunter, enum EvidenceType evidence, char* room) {
     printf("[HUNTER EVIDENCE] [%s] found [%s] in [%s] and [COLLECTED]\n", hunter, ev_str, room);
 }
 
-
 /*
     Logs the ghost moving into a new room.
     in: room - the room name to log

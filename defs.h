@@ -8,7 +8,8 @@
 
 #define MAX_STR         64
 #define MAX_RUNS        50
-#define BOREDOM_MAX     100
+// #define BOREDOM_MAX     100
+#define BOREDOM_MAX     10
 #define C_TRUE          1
 #define C_FALSE         0
 #define HUNTER_WAIT     5000
@@ -19,6 +20,8 @@
 
 // Number of rooms in the house
 #define NUM_ROOMS       13
+
+sem_t mutex;
 
 typedef enum EvidenceType EvidenceType;
 typedef enum GhostClass GhostClass;
@@ -82,6 +85,8 @@ struct HunterType{
   EvidenceList* evidence_list;
   int fear;
   int boredom;
+  pthread_t pid;
+  char color[8];
 };
 
 /*
@@ -209,7 +214,7 @@ void connectRooms(RoomType* room1, RoomType* room2);
     Input:  RoomList* rooms - pointer to the room list
     Return: RoomType* - pointer to the random room
 */
-RoomType* getRandomRoom(RoomList* rooms);
+RoomType* getRandomRoom(RoomList* rooms, int excludeVan);
 /* 
   Function: Cleanup Connected Room List
   Purpose:  Free all nodes of a room list, leaving the data alone.
@@ -271,7 +276,7 @@ void cleanupHouse(HouseType* house);
     Input/Output: HunterType* newHunter
 */
 void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList* sharedEvidenceList, HunterType* newHunter);
-void hunterHandler(HunterType*);
+void *hunterHandler(void*);
 
 /* 
   Function: hunter moving
@@ -290,7 +295,6 @@ void removeHunterFromRoom(RoomType* room, HunterType* hunter); // helper for hun
     Input: HunterType* hunter, EvidenceType detection_type
 */
 void hunterCollect(HunterType* hunter, EvidenceType detection_type);
-
 /* 
   Function: hunter reviewing evidence
   Purpose: hunter reviewing the evidence they have gathered, if any 
@@ -298,6 +302,7 @@ void hunterCollect(HunterType* hunter, EvidenceType detection_type);
     Input: HunterType* hunter
 */
 void hunterReview(HunterType* hunter);
+void hunterExit (HunterType* hunter);
 
 // ************************* //
 // Ghost Function Prototypes //
@@ -315,7 +320,7 @@ void initGhost(GhostType** ghost, RoomType* startingRoom);
   Params:   
     Input:  GhostType* ghost - pointer to the ghost to handle
 */
-void ghostHandler(GhostType* ghost);
+void *ghostHandler(void* arg);
 /* 
   Function: Ghost Move
   Purpose:  Moves a ghost to a random connected room

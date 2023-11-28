@@ -52,8 +52,8 @@ void connectRooms(RoomType* room1, RoomType* room2) {
     addRoom(room2->connected_rooms, room1);
 }
 
-RoomType* getRandomRoom(RoomList* rooms) {
-    int rand_index = randInt(0, rooms->size);
+RoomType* getRandomRoom(RoomList* rooms, int excludeVan) {
+    int rand_index = randInt(excludeVan, rooms->size);
     RoomNode* curr_node = rooms->head;
 
     for (int i = 0; i < rand_index; i++) {
