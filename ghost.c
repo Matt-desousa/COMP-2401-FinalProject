@@ -17,8 +17,6 @@ void initGhost(GhostType** ghost, RoomType* startingRoom) {
 void *ghostHandler(void* arg) {
     GhostType* ghost = (GhostType*) arg;
     while (ghost->boredom < BOREDOM_MAX) {
-        sem_post(&mutex);
-           
         if (ghost->curr_room->num_hunters > 0) {
             ghost->boredom = 0;
         }
@@ -26,7 +24,7 @@ void *ghostHandler(void* arg) {
             ghost->boredom++;
         }
         
-        int choice = randInt(0, 3);
+        int choice = randInt(0, 1);
         switch (choice) {
             case 0:
                 ghostMove(ghost);
@@ -39,34 +37,47 @@ void *ghostHandler(void* arg) {
                 break;
         }
         sleep(1);
-        sem_wait(&mutex);
     }
     printf("\033[0m"); 
     l_ghostExit(LOG_BORED);
 }
 
 void ghostMove(GhostType* ghost) {
-    RoomList* connected = ghost->curr_room->connected_rooms;
 
-    RoomType* room = getRandomRoom(connected, 0);
+    RoomType* new_room = getRandomRoom(ghost->curr_room->connected_rooms, 0);
 
-    if (room->num_hunters > 0) {
+    if (new_room->num_hunters > 0) {
        // Do nothing.
+       for (int i = 0; i < NUM_HUNTERS; i++) {
+        printf("%p ", new_room->hunters_in_room[i]); 
+       }
+       printf("\n");
+       l_ghostMove(new_room->name, 0);
        return;
     }
 
+    RoomType* old_room = ghost->curr_room;
+
+    sem_wait(&old_room->mutex);
+    sem_wait(&new_room->mutex);
+
     ghost->curr_room->ghost_in_room = NULL;
-    ghost->curr_room = room;
+    ghost->curr_room = new_room;
     ghost->curr_room->ghost_in_room = ghost;
 
+    sem_post(&old_room->mutex);
+    sem_post(&new_room->mutex);
+
     printf("\033[0m"); 
-    l_ghostMove(ghost->curr_room->name);
+    l_ghostMove(ghost->curr_room->name, 1);
 }
 
 void leaveEvidence(GhostType* ghost) {
     EvidenceNode* new_evidence = malloc(sizeof(EvidenceNode));
     new_evidence->data = getRandomEvidence(&(ghost->evidence_list));
     new_evidence->next = NULL;
+
+    sem_wait(&ghost->curr_room->evidence_in_room->mutex);
 
     if (ghost->curr_room->evidence_in_room->head == NULL) {
         ghost->curr_room->evidence_in_room->head = new_evidence;
@@ -77,6 +88,8 @@ void leaveEvidence(GhostType* ghost) {
     }
 
     ghost->curr_room->evidence_in_room->size++;
+
+    sem_post(&ghost->curr_room->evidence_in_room->mutex);
 
     printf("\033[0m");
     // printEvidenceList(ghost->curr_room->evidence_in_room);

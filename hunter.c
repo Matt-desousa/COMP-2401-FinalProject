@@ -23,7 +23,8 @@ void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList*
     newHunter->fear = 0;
     newHunter->boredom = 0;
 
-    l_hunterInit(newHunter->name, newHunter->evidence_type);
+    l_hunterInit(newHunter->name, newHunter->evidence_type, newHunter->color);
+    printf("%p", newHunter);
 }
 
 /*
@@ -33,8 +34,6 @@ void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList*
 void *hunterHandler(void* arg){
     HunterType* hunter = (HunterType*) arg;
     while (hunter->boredom < BOREDOM_MAX && hunter->fear < FEAR_MAX) {
-        sem_post(&mutex);
-
         if (hunter->curr_room->ghost_in_room != NULL) {
             hunter->fear++;
             hunter->boredom = 0;
@@ -43,7 +42,7 @@ void *hunterHandler(void* arg){
             hunter->boredom++;
         }
         
-        int choice = randInt(0, 3); // not inclusive so max is 3
+        int choice = randInt(0, 1); // not inclusive so max is 3
         switch (choice) {
             case 0:
                 hunterMove(hunter, hunter->curr_room);
@@ -56,7 +55,6 @@ void *hunterHandler(void* arg){
                 break;
         }
         sleep(1);
-        sem_wait(&mutex);
     }
     hunterExit(hunter);
 }
@@ -67,15 +65,14 @@ void *hunterHandler(void* arg){
     in: current room (room data)
 */
 void hunterMove(HunterType* hunter, RoomType* current_room) {
+
     RoomList* connected = current_room->connected_rooms; // get list of connected rooms
 
-    // add a semaphore (since there are multiple hunters that will be using this function) here but i still havent figured that out...
-    
-    // if there are no connected rooms, the hunter stays in the curr room
-    if (connected->size == 0) {
-        l_hunterMove(hunter->name, current_room->name);
-        return;
-    }
+    // // if there are no connected rooms, the hunter stays in the curr room
+    // if (connected->size == 0) {
+    //     l_hunterMove(hunter->name, current_room->name);
+    //     return;
+    // }
 
     // randomly select a connected room
     RoomType* new_room = getRandomRoom(connected, 0);
@@ -83,21 +80,25 @@ void hunterMove(HunterType* hunter, RoomType* current_room) {
     // update the hunter's current room
     hunter->curr_room = new_room;
 
+    sem_wait(&current_room->mutex);
+    sem_wait(&new_room->mutex);
     // update the hunter collection in the curr room
     removeHunterFromRoom(current_room, hunter);
-    addHunterToRoom(hunter->curr_room, hunter);
+    addHunterToRoom(new_room, hunter);
 
-    printf("%s", hunter->color);
+    sem_post(&current_room->mutex);
+    sem_post(&new_room->mutex);
+
     // logging hunter movement
-    l_hunterMove(hunter->name, hunter->curr_room->name);
+    l_hunterMove(hunter->name, hunter->curr_room->name, hunter->color);
 }
 
 // helper function to add hunter (for hunterMove function)
 void addHunterToRoom(RoomType* room, HunterType* hunter) {
     // find an empty slot in the array and add the hunter
     for (int i = 0; i < NUM_HUNTERS; i++) {
-        if (room->hunters_in_room[i].curr_room == NULL) {
-            room->hunters_in_room[i] = *hunter;
+        if (room->hunters_in_room[i] == NULL) {
+            room->hunters_in_room[i] = hunter;
             room->num_hunters++;
             return;
         }
@@ -108,10 +109,10 @@ void addHunterToRoom(RoomType* room, HunterType* hunter) {
 void removeHunterFromRoom(RoomType* room, HunterType* hunter) {
     // find the hunter in the array and clear the slot
     for (int i = 0; i < NUM_HUNTERS; i++) {
-        if (&room->hunters_in_room[i] == hunter) {
-            room->hunters_in_room[i].curr_room = NULL;
+        if (room->hunters_in_room[i] == hunter) {
+            room->hunters_in_room[i] = NULL;
             room->num_hunters--;
-            return;
+            break;
         }
     }
 }
@@ -124,51 +125,50 @@ void removeHunterFromRoom(RoomType* room, HunterType* hunter) {
 void hunterCollect(HunterType* hunter, EvidenceType detectionType) {
     RoomType* current_room = hunter->curr_room;
 
-    // check if the current room has evidence
-    if (current_room->evidence_in_room->size > 0) {
-        EvidenceNode* curr_evidence = current_room->evidence_in_room->head;
-        EvidenceNode* prev_evidence = NULL;
+    EvidenceNode* curr_evidence = current_room->evidence_in_room->head;
+    EvidenceNode* prev_evidence = NULL;
 
-        while (curr_evidence != NULL) {
-            // check if the evidence matches the hunter's detection type
-            if (curr_evidence->data == detectionType) {
-                // remove the evidence from the room's evidence collection
-                if (prev_evidence == NULL) {
-                    // the evidence to be removed is at the head of the list
-                    current_room->evidence_in_room->head = curr_evidence->next;
-                    if (current_room->evidence_in_room->head == NULL) {
-                        // if the list is now empty then update the tail
-                        current_room->evidence_in_room->tail = NULL;
-                    }
-                } else {
-                    // the evidence to be removed is in the middle or at the end of the list
-                    prev_evidence->next = curr_evidence->next;
-                    if (prev_evidence->next == NULL) {
-                        // if the removed evidence was at the tail then update the tail
-                        current_room->evidence_in_room->tail = prev_evidence;
-                    }
+    sem_wait(&current_room->mutex); // lock the current room
+
+    while (curr_evidence != NULL) {
+        // check if the evidence matches the hunter's detection type
+        if (curr_evidence->data == detectionType) {
+            // remove the evidence from the room's evidence collection
+            if (prev_evidence == NULL) {
+                // the evidence to be removed is at the head of the list
+                current_room->evidence_in_room->head = curr_evidence->next;
+                if (current_room->evidence_in_room->head == NULL) {
+                    // if the list is now empty then update the tail
+                    current_room->evidence_in_room->tail = NULL;
                 }
-
-                // add the evidence to the shared evidence collection for all hunters
-                initEvidenceNode(curr_evidence->data, hunter);
-
-                free(curr_evidence);
-
-                printf("%s", hunter->color);
-                // log the event...
-                l_hunterCollect(hunter->name, detectionType, current_room->name);
-
-                return;
+            } else {
+                // the evidence to be removed is in the middle or at the end of the list
+                prev_evidence->next = curr_evidence->next;
+                if (prev_evidence->next == NULL) {
+                    // if the removed evidence was at the tail then update the tail
+                    current_room->evidence_in_room->tail = prev_evidence;
+                }
             }
 
-            // move to the next evidence node
-            prev_evidence = curr_evidence;
-            curr_evidence = curr_evidence->next;
+            // add the evidence to the shared evidence collection for all hunters
+            initEvidenceNode(curr_evidence->data, hunter);
+
+            free(curr_evidence);
+
+            printf("%s", hunter->color);
+            // log the event...
+            l_hunterCollect(hunter->name, detectionType, current_room->name, hunter->color);
+
+            return;
         }
+
+        // move to the next evidence node
+        prev_evidence = curr_evidence;
+        curr_evidence = curr_evidence->next;
     }
 
     // log the event even if no evidence is found
-    // l_hunterCollect(hunter->name, EV_UNKNOWN, current_room->name);
+    l_hunterCollect(hunter->name, EV_UNKNOWN, current_room->name, hunter->color);
 }
 
 /*
@@ -176,6 +176,8 @@ void hunterCollect(HunterType* hunter, EvidenceType detectionType) {
     in: hunter thats collecting evidence
 */
 void hunterReview(HunterType* hunter) {
+    sem_wait(&hunter->evidence_list->mutex); // lock the shared evidence list
+
     // printEvidenceList(hunter->evidence_list);
     EvidenceList* sharedEvidenceList = hunter->evidence_list;
     EvidenceType uniqueEvidenceTypes[3] = {EV_UNKNOWN, EV_UNKNOWN, EV_UNKNOWN}; // store the unique evidence types here for checking
@@ -202,16 +204,18 @@ void hunterReview(HunterType* hunter) {
 
         currentEvidence = currentEvidence->next;
     }
+    
+    sem_post(&hunter->evidence_list->mutex); // unlock the shared evidence list
 
     // check if there are at least three unique evidence types
     printf("%s", hunter->color);
     if (uniqueEvidenceCount >= 3) {
         // log the event and exit...
-        l_hunterReview(hunter->name, LOG_SUFFICIENT);
-        l_hunterExit(hunter->name, LOG_SUFFICIENT);
+        l_hunterReview(hunter->name, LOG_SUFFICIENT, hunter->color);
+        l_hunterExit(hunter->name, LOG_SUFFICIENT, hunter->color);
     } else {
         // log the event...
-        l_hunterReview(hunter->name, LOG_INSUFFICIENT);
+        l_hunterReview(hunter->name, LOG_INSUFFICIENT, hunter->color);
     }
 }
 
@@ -219,12 +223,12 @@ void hunterExit (HunterType* hunter) {
     removeHunterFromRoom(hunter->curr_room, hunter);
     printf("%s", hunter->color);
     if (hunter->fear >= FEAR_MAX) {
-        l_hunterExit(hunter->name, LOG_FEAR);
+        l_hunterExit(hunter->name, LOG_FEAR, hunter->color);
     }
     else if (hunter->boredom >= BOREDOM_MAX) {
-        l_hunterExit(hunter->name, LOG_BORED);
+        l_hunterExit(hunter->name, LOG_BORED, hunter->color);
     }
     else {
-        l_hunterExit(hunter->name, LOG_EVIDENCE);
+        l_hunterExit(hunter->name, LOG_EVIDENCE, hunter->color);
     }
 }

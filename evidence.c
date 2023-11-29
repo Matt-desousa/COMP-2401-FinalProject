@@ -4,6 +4,7 @@ void initEvidenceList(EvidenceList* list) {
     list->head = NULL;
     list->tail = NULL;
     list->size = 0;
+    sem_init(&list->mutex, 0, 1);
 }
 
 void initEvidenceNode(EvidenceType data, HunterType* hunter) {

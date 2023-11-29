@@ -19,8 +19,11 @@ void initRoom(RoomType** room, char* name) {
     (*room)->num_hunters = 0;
 
     for (int i = 0; i < NUM_HUNTERS; i++) {
-        (*room)->hunters_in_room[i].curr_room = NULL;
+        (*room)->hunters_in_room[i] = NULL;
     }
+
+    sem_init(&(*room)->mutex, 0, 1);
+    sem_post(&(*room)->mutex);
 
     (*room)->ghost_in_room = NULL;
 }

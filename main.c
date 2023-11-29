@@ -21,22 +21,17 @@ int main() {
 
     // Start the game
 
-    if (sem_init(&mutex, 0, 1) < 0) {
-        printf("semaphore initialization error\n");
-        exit(1);
-    }
-
     pthread_create(&ghost->pid, NULL, ghostHandler, ghost);
-    pthread_create(&house.hunters[0].pid, NULL, hunterHandler, &house.hunters[0]);
-    pthread_create(&house.hunters[1].pid, NULL, hunterHandler, &house.hunters[1]);
-    pthread_create(&house.hunters[2].pid, NULL, hunterHandler, &house.hunters[2]);
-    pthread_create(&house.hunters[3].pid, NULL, hunterHandler, &house.hunters[3]);
+    pthread_create(&house.hunters[0].tid, NULL, hunterHandler, &house.hunters[0]);
+    pthread_create(&house.hunters[1].tid, NULL, hunterHandler, &house.hunters[1]);
+    pthread_create(&house.hunters[2].tid, NULL, hunterHandler, &house.hunters[2]);
+    pthread_create(&house.hunters[3].tid, NULL, hunterHandler, &house.hunters[3]);
 
     // End the game
     pthread_join(ghost->pid, NULL);
 
     for(int i = 0; i < NUM_HUNTERS; i++) {
-        pthread_join(house.hunters[i].pid, NULL);
+        pthread_join(house.hunters[i].tid, NULL);
     }
 
     // Cleanup memory

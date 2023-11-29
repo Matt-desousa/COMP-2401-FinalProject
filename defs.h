@@ -21,8 +21,6 @@
 // Number of rooms in the house
 #define NUM_ROOMS       13
 
-sem_t mutex;
-
 typedef enum EvidenceType EvidenceType;
 typedef enum GhostClass GhostClass;
 
@@ -65,6 +63,7 @@ struct EvidenceList{
   EvidenceNode* head;
   EvidenceNode* tail;
   int size;
+  sem_t mutex;
 };
 
 /*
@@ -85,7 +84,7 @@ struct HunterType{
   EvidenceList* evidence_list;
   int fear;
   int boredom;
-  pthread_t pid;
+  pthread_t tid;
   char color[8];
 };
 
@@ -129,9 +128,10 @@ struct RoomType{
   char name[MAX_STR];
   RoomList* connected_rooms;
   EvidenceList* evidence_in_room;
-  HunterType hunters_in_room[NUM_HUNTERS];
+  HunterType *hunters_in_room[NUM_HUNTERS];
   int num_hunters;
   GhostType* ghost_in_room;
+  sem_t mutex;
 };
 
 /*
@@ -163,8 +163,6 @@ struct HouseType{
   RoomList rooms;
   EvidenceList evidence_list;
 };
-
-
 
 // ************************ //
 // Room Function Prototypes //
@@ -412,13 +410,13 @@ void ghostToString(enum GhostClass, char*); // Convert a ghost type to a string,
 void evidenceToString(enum EvidenceType, char*); // Convert an evidence type to a string, stored in output parameter
 
 // Logging Utilities
-void l_hunterInit(char* name, enum EvidenceType equipment);
-void l_hunterMove(char* name, char* room);
-void l_hunterReview(char* name, enum LoggerDetails reviewResult);
-void l_hunterCollect(char* name, enum EvidenceType evidence, char* room);
-void l_hunterExit(char* name, enum LoggerDetails reason);
+void l_hunterInit(char* name, enum EvidenceType equipment, char* color);
+void l_hunterMove(char* name, char* room, char* color);
+void l_hunterReview(char* name, enum LoggerDetails reviewResult, char* color);
+void l_hunterCollect(char* name, enum EvidenceType evidence, char* room, char* color);
+void l_hunterExit(char* name, enum LoggerDetails reason, char* color);
 void l_ghostInit(enum GhostClass type, char* room);
-void l_ghostMove(char* room);
+void l_ghostMove(char* room, int success);
 void l_ghostEvidence(enum EvidenceType evidence, char* room);
 void l_ghostExit(enum LoggerDetails reason);
 
