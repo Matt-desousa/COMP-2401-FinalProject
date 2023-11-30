@@ -68,11 +68,8 @@ RoomType* getRandomRoom(RoomList* rooms, int excludeVan) {
 
 void cleanupRoom(RoomType* room) {
     cleanupConnectedRoomList(room->connected_rooms);
-    free(room->connected_rooms);
-
     cleanupEvidenceList(room->evidence_in_room);
     free(room->evidence_in_room);
-
     free(room);
 }
 
@@ -84,6 +81,7 @@ void cleanupConnectedRoomList(RoomList* list) {
         free(curr);
         curr = next;
     }
+    free(list);
 }
 
 void cleanupRoomList(RoomList* list) {

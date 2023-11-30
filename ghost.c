@@ -73,27 +73,29 @@ void ghostMove(GhostType* ghost) {
 }
 
 void leaveEvidence(GhostType* ghost) {
-    EvidenceNode* new_evidence = malloc(sizeof(EvidenceNode));
-    new_evidence->data = getRandomEvidence(&(ghost->evidence_list));
-    new_evidence->next = NULL;
+    EvidenceType new_evidence = getRandomEvidence(&(ghost->evidence_list));
 
     sem_wait(&ghost->curr_room->evidence_in_room->mutex);
 
     EvidenceNode* curr_node = ghost->curr_room->evidence_in_room->head;
     while(curr_node != NULL) {
-        if (curr_node->data == new_evidence->data) {
+        if (curr_node->data == new_evidence) {
             sem_post(&ghost->curr_room->evidence_in_room->mutex);
             return;
         }
         curr_node = curr_node->next;   
     }
 
+    EvidenceNode* new_evidence_node = malloc(sizeof(EvidenceNode));
+    new_evidence_node->data = new_evidence;
+    new_evidence_node->next = NULL;
+
     if (ghost->curr_room->evidence_in_room->head == NULL) {
-        ghost->curr_room->evidence_in_room->head = new_evidence;
-        ghost->curr_room->evidence_in_room->tail = new_evidence;
+        ghost->curr_room->evidence_in_room->head = new_evidence_node;
+        ghost->curr_room->evidence_in_room->tail = new_evidence_node;
     } else {
-        ghost->curr_room->evidence_in_room->tail->next = new_evidence;
-        ghost->curr_room->evidence_in_room->tail = new_evidence;
+        ghost->curr_room->evidence_in_room->tail->next = new_evidence_node;
+        ghost->curr_room->evidence_in_room->tail = new_evidence_node;
     }
 
     ghost->curr_room->evidence_in_room->size++;
@@ -101,7 +103,7 @@ void leaveEvidence(GhostType* ghost) {
     sem_post(&ghost->curr_room->evidence_in_room->mutex);
 
     // printEvidenceList(ghost->curr_room->evidence_in_room);
-    l_ghostEvidence(new_evidence->data, ghost->curr_room->name);
+    l_ghostEvidence(new_evidence_node->data, ghost->curr_room->name);
 }
 
 void cleanupGhost(GhostType* ghost) {

@@ -24,7 +24,6 @@ void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList*
     newHunter->boredom = 0;
 
     l_hunterInit(newHunter->name, newHunter->evidence_type, newHunter->color);
-    printf("%p", newHunter);
 }
 
 /*
