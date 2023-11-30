@@ -2,7 +2,7 @@
 #include <pthread.h>
 #include <semaphore.h>
 
-void initGhost(GhostType** ghost, RoomType* startingRoom) {
+void initGhost(RoomType* startingRoom, GhostType** ghost) {
     *ghost = malloc(sizeof(GhostType));
     (*ghost)->ghost_class = randomGhost();
     (*ghost)->curr_room = startingRoom;
@@ -48,11 +48,6 @@ void ghostMove(GhostType* ghost) {
 
     if (new_room->num_hunters > 0) {
        // Do nothing.
-    //    for (int i = 0; i < NUM_HUNTERS; i++) {
-    //     printf("%p ", new_room->hunters_in_room[i]); 
-    //    }
-    //    printf("\n");
-       l_ghostMove(new_room->name, 0);
        return;
     }
 

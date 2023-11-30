@@ -46,10 +46,10 @@ void *hunterHandler(void* arg){
         int choice = randInt(0, 3); // not inclusive so max is 3
         switch (choice) {
             case 0:
-                hunterMove(hunter, hunter->curr_room);
+                hunterMove(hunter);
                 break;
             case 1:
-                hunterCollect(hunter, hunter->evidence_type);
+                hunterCollect(hunter);
                 break;
             case 2:
                 sufficient = hunterReview(hunter);
@@ -69,7 +69,8 @@ void *hunterHandler(void* arg){
     in: hunter thats moving
     in: current room (room data)
 */
-void hunterMove(HunterType* hunter, RoomType* current_room) {
+void hunterMove(HunterType* hunter) {
+    RoomType* current_room = hunter->curr_room;
 
     RoomList* connected = current_room->connected_rooms; // get list of connected rooms
 
@@ -127,7 +128,9 @@ void removeHunterFromRoom(RoomType* room, HunterType* hunter) {
     in: hunter thats collecting evidence
     in: evidence type that hunter is assigned to collect
 */
-void hunterCollect(HunterType* hunter, EvidenceType detectionType) {
+void hunterCollect(HunterType* hunter) {
+    EvidenceType detectionType = hunter->evidence_type;
+
     RoomType* current_room = hunter->curr_room;
 
     EvidenceNode* curr_evidence = current_room->evidence_in_room->head;
@@ -157,11 +160,10 @@ void hunterCollect(HunterType* hunter, EvidenceType detectionType) {
             }
 
             // add the evidence to the shared evidence collection for all hunters
-            initEvidenceNode(curr_evidence->data, hunter);
+            addEvidence(hunter->evidence_list, initEvidenceNode(curr_evidence->data));
 
             free(curr_evidence);
 
-            printf("%s", hunter->color);
             // log the event...
             l_hunterCollect(hunter->name, detectionType, current_room->name, hunter->color);
 

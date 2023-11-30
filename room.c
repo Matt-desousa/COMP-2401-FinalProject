@@ -6,7 +6,7 @@ void initRoomList(RoomList* list) {
     list->size = 0;
 }
 
-void initRoom(RoomType** room, char* name) {
+void initRoom(char* name, RoomType** room) {
     *room = malloc(sizeof(RoomType));
     strcpy((*room)->name, name);
 
@@ -30,7 +30,7 @@ void initRoom(RoomType** room, char* name) {
 
 RoomType* createRoom(char* name) {
     RoomType* room;
-    initRoom(&room, name);
+    initRoom(name, &room);
     return room;
 }
 
