@@ -179,7 +179,7 @@ void hunterCollect(HunterType* hunter) {
     sem_post(&hunter->evidence_list->mutex); // unlock the shared evidence list
 
     // log the event even if no evidence is found
-    // l_hunterCollect(hunter->name, EV_UNKNOWN, current_room->name, hunter->color);
+    l_hunterCollectNone(hunter->name, current_room->name, hunter->color);
 }
 
 /*

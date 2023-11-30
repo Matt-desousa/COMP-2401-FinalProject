@@ -469,7 +469,9 @@ void l_hunterCollect(char* name, enum EvidenceType evidence, char* room, char* c
             enum LoggerDetails reason - whether or not the hunter found sufficient evidence
             char* color - color of the hunter`s output
 */
+
 void l_hunterExit(char* name, enum LoggerDetails reason, char* color);
+void l_hunterCollectNone(char* hunter, char* room, char* color);
 /* 
   Function: Log Ghost Initialization
   Purpose:  Logs a ghost's initialization
