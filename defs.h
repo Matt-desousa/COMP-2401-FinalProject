@@ -414,6 +414,7 @@ void l_hunterInit(char* name, enum EvidenceType equipment, char* color);
 void l_hunterMove(char* name, char* room, char* color);
 void l_hunterReview(char* name, enum LoggerDetails reviewResult, char* color);
 void l_hunterCollect(char* name, enum EvidenceType evidence, char* room, char* color);
+void l_hunterCollectNone(char* hunter, char* room, char* color);
 void l_hunterExit(char* name, enum LoggerDetails reason, char* color);
 void l_ghostInit(enum GhostClass type, char* room);
 void l_ghostMove(char* room, int success);
