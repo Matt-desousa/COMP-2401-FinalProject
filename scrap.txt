@@ -38,30 +38,34 @@ ghostHandler - Handles the ghost loop and actions performed{
 ghostMove - Pick a random connecting room to move to. If a hunter is in the room, either leave evidence or do nothing.
 leaveEvidence - Leave a random evidence from the ghosts evidence array.
 
-    sem_wait(&hunter->evidence_list->mutex); // lock the shared evidence list
+    // sem_wait(&hunter->evidence_list->mutex); // lock the shared evidence list
+    // sem_wait(&hunter->curr_room->evidence_in_room->mutex); // lock the current room's evidence list
 
-    EvidenceNode* curr_evidence = hunter->curr_room->evidence_in_room->head;
-    EvidenceNode* prev_evidence = NULL;
+    // printEvidenceList(hunter->curr_room->evidence_in_room, hunter->color);
 
-    while(curr_evidence != NULL){
-        if (curr_evidence->data == hunter->evidence_type){
-            if (hunter->evidence_list->head == NULL){
-                hunter->evidence_list->head = curr_evidence;
-                hunter->evidence_list->tail = curr_evidence;
-            }
-            else{
-                hunter->evidence_list->tail->next = curr_evidence;
-                hunter->evidence_list->tail = curr_evidence;
-            }
-            l_hunterCollect(hunter->name, hunter->evidence_type, hunter->curr_room->name, hunter->color);
+    // EvidenceNode* curr_evidence = hunter->curr_room->evidence_in_room->head;
+    // EvidenceNode* prev_evidence = NULL;
+
+    // while(curr_evidence != NULL){
+    //     if (curr_evidence->data == hunter->evidence_type){
+    //         if (hunter->evidence_list->head == NULL){
+    //             hunter->evidence_list->head = curr_evidence;
+    //             hunter->evidence_list->tail = curr_evidence;
+    //         }
+    //         else{
+    //             hunter->evidence_list->tail->next = curr_evidence;
+    //             hunter->evidence_list->tail = curr_evidence;
+    //         }
+    //         l_hunterCollect(hunter->name, hunter->evidence_type, hunter->curr_room->name, hunter->color);
             
-            break;
-        }
-        else{
-            prev_evidence = curr_evidence;
-            curr_evidence = curr_evidence->next;
-        }
-    }
+    //         break;
+    //     }
+    //     else{
+    //         prev_evidence = curr_evidence;
+    //         curr_evidence = curr_evidence->next;
+    //     }
+    // }
 
-    sem_post(&hunter->evidence_list->mutex); // unlock the shared evidence list
-    l_hunterCollect(hunter->name, EV_UNKNOWN, hunter->curr_room->name, hunter->color);
+    // sem_post(&hunter->evidence_list->mutex); // unlock the shared evidence list
+    // sem_post(&hunter->curr_room->evidence_in_room->mutex); // unlock the current room's evidence list
+    // // l_hunterCollect(hunter->name, EV_UNKNOWN, hunter->curr_room->name, hunter->color);

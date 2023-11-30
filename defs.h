@@ -18,8 +18,8 @@
 #define FEAR_MAX        10
 #define LOGGING         C_TRUE
 
-// Number of rooms in the house
-#define NUM_ROOMS       13
+#define SUFFICIENT      1
+#define INSUFFICIENT    0
 
 typedef enum EvidenceType EvidenceType;
 typedef enum GhostClass GhostClass;
@@ -299,7 +299,7 @@ void hunterCollect(HunterType* hunter, EvidenceType detection_type);
   Params:   
     Input: HunterType* hunter
 */
-void hunterReview(HunterType* hunter);
+int hunterReview(HunterType* hunter);
 void hunterExit (HunterType* hunter);
 
 // ************************* //
@@ -443,5 +443,5 @@ void printHouse(HouseType* house);
 // Function to print a room. Currently not to be submitted.
 void printRoom(RoomType* room);
 
-void printEvidenceList(EvidenceList* list);
+void printEvidenceList(EvidenceList* list, char *color);
 void printHunter(HunterType* hunter);

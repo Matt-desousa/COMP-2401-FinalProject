@@ -78,16 +78,17 @@ EvidenceType getRandomEvidence(EvidenceList* evidence_list) {
     return curr_node->data;
 }
 
-void printEvidenceList(EvidenceList* list) {
+void printEvidenceList(EvidenceList* list, char *color) {
     if (list->size == 0) {
-        printf("No evidence has been found.\n");
+        printf("%sNo evidence has been found.\n", color);
         return;
     }
     EvidenceNode* curr = list->head;
     while(curr != NULL) {
-        printf("%d\n", curr->data);
+        printf("%s%d ", color, curr->data);
         curr = curr->next;
     }
+    printf("\n");
 }
 
 void cleanupEvidenceList(EvidenceList* list) {

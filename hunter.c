@@ -33,6 +33,8 @@ void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList*
 */
 void *hunterHandler(void* arg){
     HunterType* hunter = (HunterType*) arg;
+
+    int sufficient = -1;
     while (hunter->boredom < BOREDOM_MAX && hunter->fear < FEAR_MAX) {
         if (hunter->curr_room->ghost_in_room != NULL) {
             hunter->fear++;
@@ -42,7 +44,7 @@ void *hunterHandler(void* arg){
             hunter->boredom++;
         }
         
-        int choice = randInt(0, 1); // not inclusive so max is 3
+        int choice = randInt(0, 3); // not inclusive so max is 3
         switch (choice) {
             case 0:
                 hunterMove(hunter, hunter->curr_room);
@@ -51,8 +53,12 @@ void *hunterHandler(void* arg){
                 hunterCollect(hunter, hunter->evidence_type);
                 break;
             case 2:
-                hunterReview(hunter);
+                sufficient = hunterReview(hunter);
                 break;
+        }
+
+        if (sufficient == SUFFICIENT){
+            break;
         }
         sleep(1);
     }
@@ -128,7 +134,8 @@ void hunterCollect(HunterType* hunter, EvidenceType detectionType) {
     EvidenceNode* curr_evidence = current_room->evidence_in_room->head;
     EvidenceNode* prev_evidence = NULL;
 
-    sem_wait(&current_room->mutex); // lock the current room
+    sem_wait(&current_room->evidence_in_room->mutex); // lock the current room
+    sem_wait(&hunter->evidence_list->mutex); // lock the shared evidence list
 
     while (curr_evidence != NULL) {
         // check if the evidence matches the hunter's detection type
@@ -159,7 +166,7 @@ void hunterCollect(HunterType* hunter, EvidenceType detectionType) {
             // log the event...
             l_hunterCollect(hunter->name, detectionType, current_room->name, hunter->color);
 
-            return;
+            break;
         }
 
         // move to the next evidence node
@@ -167,15 +174,18 @@ void hunterCollect(HunterType* hunter, EvidenceType detectionType) {
         curr_evidence = curr_evidence->next;
     }
 
+    sem_post(&current_room->evidence_in_room->mutex); // unlock the current room
+    sem_post(&hunter->evidence_list->mutex); // unlock the shared evidence list
+
     // log the event even if no evidence is found
-    l_hunterCollect(hunter->name, EV_UNKNOWN, current_room->name, hunter->color);
+    // l_hunterCollect(hunter->name, EV_UNKNOWN, current_room->name, hunter->color);
 }
 
 /*
     function for hunter reviewing evidence
     in: hunter thats collecting evidence
 */
-void hunterReview(HunterType* hunter) {
+int hunterReview(HunterType* hunter) {
     sem_wait(&hunter->evidence_list->mutex); // lock the shared evidence list
 
     // printEvidenceList(hunter->evidence_list);
@@ -212,10 +222,11 @@ void hunterReview(HunterType* hunter) {
     if (uniqueEvidenceCount >= 3) {
         // log the event and exit...
         l_hunterReview(hunter->name, LOG_SUFFICIENT, hunter->color);
-        l_hunterExit(hunter->name, LOG_SUFFICIENT, hunter->color);
+        return SUFFICIENT;
     } else {
         // log the event...
         l_hunterReview(hunter->name, LOG_INSUFFICIENT, hunter->color);
+        return INSUFFICIENT;
     }
 }
 
