@@ -78,6 +78,16 @@ void l_hunterCollect(char* hunter, enum EvidenceType evidence, char* room, char*
     printf("%s[HUNTER EVIDENCE] [%s] found [%s] in [%s] and [COLLECTED]\n", color, hunter, ev_str, room);
 }
 
+/*
+    Logs the hunter NOT finding/collecting evidence.
+    in: hunter - the hunter name to log
+    in: evidence - the evidence type to log
+    in: room - the room name to log
+*/
+void l_hunterCollectNone(char* hunter, char* room, char* color) {
+    if (!LOGGING) return;
+    printf("%s[HUNTER EVIDENCE] [%s] found [NONE] in [%s]\n", color, hunter, room);
+}
 
 /*
     Logs the ghost moving into a new room.
