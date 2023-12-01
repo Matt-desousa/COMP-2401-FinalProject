@@ -2,11 +2,12 @@
 #include <pthread.h>
 #include <semaphore.h>
 
-void initGhost(RoomType* startingRoom, GhostType** ghost) {
+void initGhost(GhostType** ghost, RoomType* startingRoom, HouseType* newHouse) {
     *ghost = malloc(sizeof(GhostType));
     (*ghost)->ghost_class = randomGhost();
     (*ghost)->curr_room = startingRoom;
     (*ghost)->curr_room->ghost_in_room = *ghost;
+    (*ghost)->house = newHouse;
     initGhostEvidenceList(&(*ghost)->evidence_list, (*ghost)->ghost_class);
     (*ghost)->boredom = 0;
     (*ghost)->pid = 0;
@@ -16,7 +17,7 @@ void initGhost(RoomType* startingRoom, GhostType** ghost) {
 
 void *ghostHandler(void* arg) {
     GhostType* ghost = (GhostType*) arg;
-    while (ghost->boredom < BOREDOM_MAX) {
+    while (ghost->boredom < BOREDOM_MAX && ghost->house->active_hunters != 1) {
         if (ghost->curr_room->num_hunters > 0) {
             ghost->boredom = 0;
         }
