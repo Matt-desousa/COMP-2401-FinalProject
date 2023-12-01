@@ -65,6 +65,8 @@ void *hunterHandler(void* arg){
         sleep(1);
     }
     hunterExit(hunter);
+    
+    return NULL;
 }
 
 /*
