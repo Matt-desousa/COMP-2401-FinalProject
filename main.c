@@ -12,11 +12,11 @@ int main() {
 
     // Initialize the ghost
     GhostType* ghost;
-    initGhost(getRandomRoom(&(house.rooms), 1), &ghost);
+    initGhost(getRandomRoom(&(house.rooms), 1), &ghost, &house);
 
     // Initialize hunters
     for(int i = 0; i < NUM_HUNTERS; i++) {
-        initHunter(house.rooms.head->data, i, &house.evidence_list, &house.hunters[i]);
+        initHunter(house.rooms.head->data, i, &house.evidence_list, &house, &house.hunters[i]);
     }
 
     // Start the game
