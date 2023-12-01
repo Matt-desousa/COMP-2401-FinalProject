@@ -338,7 +338,7 @@ void hunterExit (HunterType* hunter, HouseType* house);
     Input:  RoomType* startingRoom - pointer to the room the ghost starts in
     Input/Output: GhostType** ghost - pointer to the ghost to initialize
 */
-void initGhost(RoomType* startingRoom, GhostType** ghost);
+void initGhost(GhostType** ghost, RoomType* startingRoom, HouseType* newHouse);
 /* 
   Function: Ghost Handler
   Purpose:  Handles the ghost's actions
