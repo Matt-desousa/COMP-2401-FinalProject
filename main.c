@@ -8,7 +8,7 @@ int main() {
     // Initialize the house
     HouseType house;
     initHouse(&house);
-    populateRooms(&house);
+    populateRooms(&house, "map.txt");
 
     // Initialize the ghost
     GhostType* ghost;
