@@ -9,7 +9,7 @@
     in: shared evidence list
     in: the hunter themself 
 */
-void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList* sharedEvidenceList, HunterType* newHunter) {
+void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList* sharedEvidenceList, Housetype* newHouse, HunterType* newHunter) {
     sprintf(newHunter->color, "\033[3%dm", evidenceType+1);
 
     printf("%sEnter hunter%d's name: ", newHunter->color, evidenceType+1);
@@ -19,6 +19,7 @@ void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList*
     newHunter->curr_room = startingRoom;
     newHunter->evidence_type = evidenceType;
     newHunter->evidence_list = sharedEvidenceList;
+    newHunter->house = newHouse;
 
     newHunter->fear = 0;
     newHunter->boredom = 0;
