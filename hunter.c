@@ -58,7 +58,10 @@ void *hunterHandler(void* arg){
 
         if (sufficient == SUFFICIENT){
             break;
+        } else if (sufficient != SUFFICIENT && hunter->house->active_hunters == 1) {
+            break;
         }
+        
         sleep(1);
     }
     hunterExit(hunter);
@@ -231,16 +234,14 @@ int hunterReview(HunterType* hunter) {
     }
 }
 
-void hunterExit (HunterType* hunter) {
+void hunterExit(HunterType* hunter, HouseType* house) {
     removeHunterFromRoom(hunter->curr_room, hunter);
     printf("%s", hunter->color);
     if (hunter->fear >= FEAR_MAX) {
         l_hunterExit(hunter->name, LOG_FEAR, hunter->color);
-    }
-    else if (hunter->boredom >= BOREDOM_MAX) {
+    } else if (hunter->boredom >= BOREDOM_MAX) {
         l_hunterExit(hunter->name, LOG_BORED, hunter->color);
     }
-    else {
-        l_hunterExit(hunter->name, LOG_EVIDENCE, hunter->color);
-    }
+
+    house->active_hunters--;
 }
