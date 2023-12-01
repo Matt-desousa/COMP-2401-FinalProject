@@ -1,16 +1,22 @@
-TARGETS = main house logger utils
+# compiler and flags
+CC = gcc
+CFLAGS = -Wall -Wextra -pthread
 
-all: 	defs.h main.c house.c logger.c utils.c room.c evidence.c hunter.c ghost.c
-		gcc -o fp main.c house.c logger.c utils.c room.c evidence.c hunter.c ghost.c -lpthread
+# source files
+SRCS = main.c house.c logger.c utils.c room.c evidence.c hunter.c ghost.c
+OBJS = $(SRCS:.c=.o)
 
-# main:	main.c defs.h
-# 		gcc -c main.c
+# executable
+TARGET = fp
 
-# house:	house.c defs.h
-# 		gcc -c house.c
+# Targets
+all: $(TARGET)
 
-# logger: logger.c defs.h
-# 		gcc -c logger.c
+$(TARGET): $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $^
 
-# utils: utils.c defs.h
-# 		gcc -c utils.c
+%.o: %.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+clean:
+	rm -f $(OBJS) $(TARGET)
