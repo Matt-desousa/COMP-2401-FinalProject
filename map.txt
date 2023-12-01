@@ -1,0 +1,13 @@
+Van Hallway
+Hallway Master_Bedroom Boy's_Bedroom Bathroom Kitchen Basement
+Master_Bedroom Hallway
+Boy's_Bedroom Hallway
+Bathroom Hallway
+Kitchen Hallway Living_Room Garage
+Basement Hallway
+Basement_Hallway Right_Storage_Room Left_Storage_Room
+Right_Storage_Room Basement_Hallway
+Left_Storage_Room Basement_Hallway
+Living_Room Kitchen
+Garage Kitchen Utility_Room
+Utility_Room Garage
