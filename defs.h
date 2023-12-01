@@ -182,6 +182,7 @@ void initHouse(HouseType* house);
     Input/Output: HouseType* house - pointer to the house to populate
 */
 void populateRooms(HouseType* house, const char* filename);
+void replaceUnderscoreWithSpace(char* str);
 /* 
   Function: Cleanup House
   Purpose:  Free all memory associated with a house
