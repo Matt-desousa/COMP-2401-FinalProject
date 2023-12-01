@@ -82,6 +82,7 @@ struct HunterType{
   EvidenceType evidence_type;
   char name[MAX_STR];
   EvidenceList* evidence_list;
+  HouseType* house;
   int fear;
   int boredom;
   pthread_t tid;
@@ -146,6 +147,7 @@ struct GhostType{
   GhostClass ghost_class;
   RoomType* curr_room;
   EvidenceList evidence_list;
+  HouseType* house;
   int boredom;
   pthread_t pid;
 };
@@ -162,6 +164,7 @@ struct HouseType{
   HunterType hunters[NUM_HUNTERS];
   RoomList rooms;
   EvidenceList evidence_list;
+  int active_hunters;
 };
 
 // House Function Prototypes
@@ -178,7 +181,7 @@ void initHouse(HouseType* house);
   Params:   
     Input/Output: HouseType* house - pointer to the house to populate
 */
-void populateRooms(HouseType* house);
+void populateRooms(HouseType* house, const char* filename);
 /* 
   Function: Cleanup House
   Purpose:  Free all memory associated with a house
@@ -272,7 +275,7 @@ void cleanupRoomList(RoomList* list);
             EvidenceList* sharedEvidenceList - pointer to the shared evidence list
     Input/Output: HunterType* newHunter - pointer to the hunter to initialize
 */
-void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList* sharedEvidenceList, HunterType* newHunter);
+void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList* sharedEvidenceList, HouseType* newHouse, HunterType* newHunter);
 /* 
   Function: Hunter Handler
   Purpose:  Handles the hunter's actions
@@ -323,7 +326,7 @@ int hunterReview(HunterType* hunter);
   Params:   
     Input:  HunterType* hunter - pointer to the hunter thats exiting
 */
-void hunterExit (HunterType* hunter);
+void hunterExit (HunterType* hunter, HouseType* house);
 
 
 
