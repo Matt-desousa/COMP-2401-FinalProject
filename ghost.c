@@ -41,6 +41,8 @@ void *ghostHandler(void* arg) {
     }
     
     l_ghostExit(LOG_BORED);
+    
+    return NULL;
 }
 
 void ghostMove(GhostType* ghost) {
