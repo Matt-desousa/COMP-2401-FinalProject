@@ -16,8 +16,8 @@ int main() {
 
     // Initialize the ghost
     GhostType* ghost;
-    initGhost(house.rooms.head->data, &(house.active_hunters), &ghost);
-    // initGhost(getRandomRoom(&(house.rooms), 1), &ghost);
+    // initGhost(house.rooms.head->data, &(house.active_hunters), &ghost);
+    initGhost(getRandomRoom(&(house.rooms), 1), &(house.active_hunters), &ghost);
 
     // Initialize hunters
     for(int i = 0; i < NUM_HUNTERS; i++) {
