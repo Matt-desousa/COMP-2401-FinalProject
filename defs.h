@@ -18,6 +18,8 @@
 #define FEAR_MAX        10
 #define LOGGING         C_TRUE
 
+#define LOG_FILE        "game_log.txt" // text file to write the game files
+
 #define SUFFICIENT      1
 #define INSUFFICIENT    0
 
