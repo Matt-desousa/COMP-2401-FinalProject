@@ -62,6 +62,8 @@ void initGhostEvidenceList(EvidenceList* evidence, GhostClass ghost) {
             addEvidence(evidence, FINGERPRINTS);
             addEvidence(evidence, SOUND);
             break;
+        default:
+            break;
     }
 }
 

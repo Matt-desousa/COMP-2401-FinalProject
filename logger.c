@@ -147,3 +147,13 @@ void l_ghostInit(enum GhostClass ghost, char* room) {
     fprintf(log_file, "[GHOST INIT] Ghost is a [%s] in room [%s]\n", ghost_str, room); // append to game_log.txt
     fclose(log_file); // close file 
 }
+
+void l_ghostDoNothing() {
+    FILE* log_file = fopen(LOG_FILE, "a"); // open game_log.txt
+
+    if (!LOGGING) return;
+    printf("\033[0m[GHOST DO NOTHING] Ghost did nothing\n");
+    fprintf(log_file, "[GHOST DO NOTHING] Ghost did nothing\n"); // append to game_log.txt
+
+    fclose(log_file); // close file 
+}
