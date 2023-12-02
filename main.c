@@ -4,7 +4,10 @@
 int main() {
     // Initialize the random number generator
     srand(time(NULL));
-
+    
+    FILE* log_file = fopen(LOG_FILE, "w");
+    fclose(log_file); // resets the text file because it will be opened again by the logging functions
+    
     // Initialize the house
     HouseType house;
     initHouse(&house);
