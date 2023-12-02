@@ -221,7 +221,7 @@ void hunterExit(HunterType* hunter) {
     }
 
     // decrement the number of active hunters
-    sem_wait(hunter->active_hunters_mutex);
+    // sem_wait(hunter->active_hunters_mutex);
     (*hunter->active_hunters)--;
-    sem_post(hunter->active_hunters_mutex);
+    // sem_post(hunter->active_hunters_mutex);
 }

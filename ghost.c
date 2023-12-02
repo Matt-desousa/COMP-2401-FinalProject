@@ -65,9 +65,10 @@ void ghostMove(GhostType* ghost) {
 
     // if the new room has a hunter in it then do nothing
     if (new_room->num_hunters > 0) {
-       // Do nothing.
-       l_ghostDoNothing();
-       return;
+        // Do nothing.
+    //    l_ghostDoNothing();
+        l_ghostMove(ghost->curr_room->name, 0);
+        return;
     }
 
     // otherwise move the ghost to the new room
