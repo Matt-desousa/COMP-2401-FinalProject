@@ -35,15 +35,6 @@ void populateRooms(HouseType* house, const char* filename) {
     fclose(file);
 }
 
-// helper function to replace underscores with spaces in a string
-void replaceUnderscoreWithSpace(char* str) {
-    for (int i = 0; str[i] != '\0'; i++) {
-        if (str[i] == '_') {
-            str[i] = ' ';
-        }
-    }
-}
-
 void cleanupHouse(HouseType* house) {
     // Call cleanupRoomList and cleanupEvidenceList
     cleanupRoomList(&house->rooms);

@@ -17,6 +17,8 @@
 #define FEAR_MAX        10
 #define LOGGING         C_TRUE
 
+#define LOG_FILE        "game_log.txt"
+
 #define SUFFICIENT      1
 #define INSUFFICIENT    0
 
@@ -179,7 +181,7 @@ struct HouseType{
   sem_t active_hunters_mutex;
 };
 
-// House Function Prototypes
+// HOUSE FUNCTION PROTOTYPES
 /* 
   Function: Initialize House
   Purpose:  Initializes a house
@@ -187,6 +189,7 @@ struct HouseType{
     Input/Output: HouseType* house - pointer to the house to initialize
 */
 void initHouse(HouseType* house);
+
 /* 
   Function: Populate Rooms
   Purpose:  Dynamically allocates several rooms and populates the provided house.
@@ -211,7 +214,7 @@ void cleanupHouse(HouseType* house);
 
 
 
-// Room Function Prototypes
+// ROOM FUNCTION PROTOTYPES
 /* 
   Function: Initialize Room List
   Purpose:  Initializes a room list
@@ -219,6 +222,7 @@ void cleanupHouse(HouseType* house);
     Input/Output: RoomList* list - pointer to the room list
 */
 void initRoomList(RoomList* list);
+
 /* 
   Function: Initialize Room
   Purpose:  Initializes a room
@@ -227,6 +231,7 @@ void initRoomList(RoomList* list);
     Input/Output: RoomType* room - pointer to the room to initialize
 */
 void initRoom(char* name, RoomType** room);
+
 /* 
   Function: Create Room
   Purpose:  Initializes a room and returns a pointer to it
@@ -235,6 +240,7 @@ void initRoom(char* name, RoomType** room);
     Return: RoomType* - pointer to the room created
 */
 RoomType* createRoom(char* name);
+
 /* 
   Function: Add Room
   Purpose:  Adds a room to the room list
@@ -243,6 +249,7 @@ RoomType* createRoom(char* name);
     Input/Output: RoomList* list - pointer to the room list
 */
 void addRoom(RoomList* list, RoomType* room);
+
 /* 
   Function: Connect Rooms
   Purpose:  Connects two rooms together by adding them to each other's connected room lists
@@ -251,6 +258,7 @@ void addRoom(RoomList* list, RoomType* room);
                   RoomType* room2 - pointer to room2, room connected to room1
 */
 void connectRooms(RoomType* room1, RoomType* room2);
+
 /* 
   Function: Get Random Room
   Purpose:  Returns a random room from the room list
@@ -260,6 +268,7 @@ void connectRooms(RoomType* room1, RoomType* room2);
     Return: RoomType* - pointer to the random room
 */
 RoomType* getRandomRoom(RoomList* rooms, int excludeVan);
+
 /* 
   Function: Cleanup Room
   Purpose:  Free all memory associated with a room
@@ -267,6 +276,7 @@ RoomType* getRandomRoom(RoomList* rooms, int excludeVan);
     Input:  RoomType* room - pointer to the room to free
 */
 void cleanupRoom(RoomType* room);
+
 /* 
   Function: Cleanup Connected Room List
   Purpose:  Free all nodes of a room list, leaving the data alone.
@@ -274,6 +284,7 @@ void cleanupRoom(RoomType* room);
     Input:  RoomList* list - pointer to the connected room list to free
 */
 void cleanupConnectedRoomList(RoomList* list);
+
 /* 
   Function: Cleanup Room List
   Purpose:  Free all memory associated with a room list
@@ -284,7 +295,7 @@ void cleanupRoomList(RoomList* list);
 
 
 
-// Hunter Function Prototypes //
+// HUNTER FUNCTION PROTOTYPES
 /* 
   Function: Initialize Hunter
   Purpose:  Initializes a hunter
@@ -311,6 +322,7 @@ void *hunterHandler(void* arg);
     Input/Output:  HunterType* hunter - pointer to the hunter to move
 */
 void hunterMove(HunterType* hunter);
+
 /* 
   Function: Add Hunter To Room
   Purpose:  Adds a hunter to a room. Helper function for hunterMove.
@@ -319,6 +331,7 @@ void hunterMove(HunterType* hunter);
             HunterType* hunter - pointer to the hunter to add to the room
 */
 void addHunterToRoom(RoomType* room, HunterType* hunter);
+
 /* 
   Function: Remove Hunter From Room
   Purpose:  Removes a hunter from a room. Helper function for hunterMove.
@@ -327,6 +340,7 @@ void addHunterToRoom(RoomType* room, HunterType* hunter);
             HunterType* hunter - pointer to the hunter to remove from the room
 */
 void removeHunterFromRoom(RoomType* room, HunterType* hunter);
+
 /* 
   Function: Hunter Collect
   Purpose:  Hunter collects evidence from the room they are in
@@ -334,6 +348,7 @@ void removeHunterFromRoom(RoomType* room, HunterType* hunter);
     Input:  HunterType* hunter - pointer to the hunter thats collecting evidence
 */
 void hunterCollect(HunterType* hunter);
+
 /* 
   Function: Hunter Review
   Purpose:  Hunter reviews the evidence they have all collected
@@ -341,6 +356,7 @@ void hunterCollect(HunterType* hunter);
     Input:  HunterType* hunter - pointer to the hunter thats reviewing the evidence
 */
 int hunterReview(HunterType* hunter);
+
 /* 
   Function: Hunter Exit
   Purpose:  Removes the hunter from their current room and logs their exit
@@ -351,7 +367,7 @@ void hunterExit (HunterType* hunter);
 
 
 
-// Ghost Function Prototypes //
+// GHOST FUNCTION PROTOTYPES
 /* 
   Function: Initialize Ghost
   Purpose:  Initializes a ghost
@@ -359,6 +375,7 @@ void hunterExit (HunterType* hunter);
     Input:  RoomType* startingRoom - pointer to the room the ghost starts in
             int* active_hunters - pointer to the number of active hunters
     Input/Output: GhostType** ghost - pointer to the ghost to initialize
+    HouseType* newHouse - pointer to the shared house of the ghost and hunter
 */
 void initGhost(RoomType* startingRoom, int* active_hunters, GhostType** ghost);
 /* 
@@ -368,6 +385,7 @@ void initGhost(RoomType* startingRoom, int* active_hunters, GhostType** ghost);
     Input:  void* arg - pointer to the ghost whos actions are being handled
 */
 void *ghostHandler(void* arg);
+
 /* 
   Function: Ghost Move
   Purpose:  Moves a ghost to a random connected room
@@ -375,6 +393,7 @@ void *ghostHandler(void* arg);
     Input/Output:  GhostType* ghost - pointer to the ghost to move
 */
 void ghostMove(GhostType* ghost);
+
 /* 
   Function: Leave Evidence
   Purpose:  Leaves evidence in the current room
@@ -382,6 +401,7 @@ void ghostMove(GhostType* ghost);
     Input:  GhostType* ghost - pointer to the ghost to leave evidence
 */
 void leaveEvidence(GhostType* ghost);
+
 /* 
   Function: Cleanup Ghost
   Purpose:  Free all memory associated with a ghost
@@ -392,7 +412,7 @@ void cleanupGhost(GhostType* ghost);
 
 
 
-// Evidence Function Prototypes //
+// EVIDENCE FUNCTION PROTOYPES
 /* 
   Function: Initialize Evidence List
   Purpose:  Initializes an evidence list
@@ -400,14 +420,16 @@ void cleanupGhost(GhostType* ghost);
     Input/Output: EvidenceList* list - pointer to the evidence list to initialize
 */
 void initEvidenceList(EvidenceList* list);
+
 /*
     Function: Initialize Evidence Node
     Purpose:  Initializes an evidence node.
     Params:
         Input:  EvidenceType data - type of evidence
-        Retrun: EvidenceNode* - pointer to the new evidence node
+        Return: EvidenceNode* - pointer to the new evidence node
 */
-EvidenceNode* initEvidenceNode(EvidenceType data);
+EvidenceNode* initEvidenceNode(EvidenceType data); // ??
+
 /* 
   Function: Add Evidence
   Purpose:  Adds an evidence to an evidence list
@@ -415,7 +437,8 @@ EvidenceNode* initEvidenceNode(EvidenceType data);
     Input:  EvidenceList* list - pointer to the evidence list to add to
             EvidenceType data - type of evidence to add
 */
-void addEvidence(EvidenceList* list, EvidenceType data);
+void addEvidence(EvidenceList* list, EvidenceType data); // ??
+
 /* 
   Function: Initialize Ghost Evidence List
   Purpose:  Initializes an evidence list for a ghost based on the ghost type
@@ -424,6 +447,7 @@ void addEvidence(EvidenceList* list, EvidenceType data);
     Output: EvidenceList* evidence - pointer to the evidence list to initialize
 */
 void initGhostEvidenceList(EvidenceList* evidence, GhostClass ghost);
+
 /* 
   Function: Get Random Evidence
   Purpose:  Returns a random evidence type from the ghost's evidence list. Helper function for leaveEvidence.
@@ -432,6 +456,7 @@ void initGhostEvidenceList(EvidenceList* evidence, GhostClass ghost);
     Return: EvidenceType - random evidence type
 */
 EvidenceType getRandomEvidence(EvidenceList* evidence_list);
+
 /* 
   Function: Cleanup Evidence List
   Purpose:  Free all memory associated with an evidence list
@@ -483,7 +508,7 @@ void evidenceToString(enum EvidenceType, char*); // Convert an evidence type to 
 
 
 
-// Logging Utilities
+// LOGGING UTILITIES
 /* 
   Function: Log Hunter Initialization
   Purpose:  Logs a hunter's initialization
@@ -493,6 +518,7 @@ void evidenceToString(enum EvidenceType, char*); // Convert an evidence type to 
             char* color - color of the hunter`s output
 */
 void l_hunterInit(char* name, enum EvidenceType equipment, char* color);
+
 /* 
   Function: Log Hunter Move
   Purpose:  Logs a hunter moving
@@ -502,6 +528,7 @@ void l_hunterInit(char* name, enum EvidenceType equipment, char* color);
             char* color - color of the hunter`s output
 */
 void l_hunterMove(char* name, char* room, char* color);
+
 /* 
   Function: Log Hunter Review
   Purpose:  Logs a hunter reviewing evidence
@@ -521,6 +548,7 @@ void l_hunterReview(char* name, enum LoggerDetails result, char* color);
             char* color - color of the hunter`s output
 */
 void l_hunterCollect(char* name, enum EvidenceType evidence, char* room, char* color);
+
 /* 
   Function: Log Hunter Exit
   Purpose:  Logs a hunter's exit
@@ -546,6 +574,7 @@ void l_ghostInit(enum GhostClass ghost, char* room);
             int success - whether or not the ghost was able to move to the room
 */
 void l_ghostMove(char* room, int success);
+
 /* 
   Function: Log Ghost Evidence
   Purpose:  Logs a ghost leaving evidence
