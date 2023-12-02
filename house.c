@@ -1,8 +1,15 @@
 #include "defs.h"
 
 void initHouse(HouseType* house) {
+    // Initialize the rooms list
     initRoomList(&house->rooms);
+
+    // Initialize the evidence list
     initEvidenceList(&house->evidence_list);
+
+    // Initialize the active hunters
+    house->active_hunters = 0;
+    sem_init(&house->active_hunters_mutex, 0, 1);
 }
 
 void populateRooms(HouseType* house, const char* filename) {
@@ -38,6 +45,7 @@ void replaceUnderscoreWithSpace(char* str) {
 }
 
 void cleanupHouse(HouseType* house) {
+    // Call cleanupRoomList and cleanupEvidenceList
     cleanupRoomList(&house->rooms);
     cleanupEvidenceList(&house->evidence_list);
 }

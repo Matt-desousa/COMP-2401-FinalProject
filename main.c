@@ -1,5 +1,6 @@
 #include "defs.h"
 #include <pthread.h>
+#include <semaphore.h>
 
 int main() {
     // Initialize the random number generator
@@ -12,11 +13,12 @@ int main() {
 
     // Initialize the ghost
     GhostType* ghost;
-    initGhost(getRandomRoom(&(house.rooms), 1), &ghost, &house);
+    initGhost(house.rooms.head->data, &(house.active_hunters), &ghost);
+    // initGhost(getRandomRoom(&(house.rooms), 1), &ghost);
 
     // Initialize hunters
     for(int i = 0; i < NUM_HUNTERS; i++) {
-        initHunter(house.rooms.head->data, i, &house.evidence_list, &house, &house.hunters[i]);
+        initHunter(house.rooms.head->data, i, &house.evidence_list, &(house.active_hunters), &(house.active_hunters_mutex), &house.hunters[i]);
     }
 
     // Start the game
@@ -26,12 +28,11 @@ int main() {
     pthread_create(&house.hunters[2].tid, NULL, hunterHandler, &house.hunters[2]);
     pthread_create(&house.hunters[3].tid, NULL, hunterHandler, &house.hunters[3]);
 
-    // End the game
     pthread_join(ghost->pid, NULL);
 
+    // End the game
     for(int i = 0; i < NUM_HUNTERS; i++) {
         pthread_join(house.hunters[i].tid, NULL);
-        
     }
 
     // Cleanup memory

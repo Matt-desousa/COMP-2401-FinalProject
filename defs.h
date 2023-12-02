@@ -9,7 +9,6 @@
 #define MAX_STR         64
 #define MAX_RUNS        50
 #define BOREDOM_MAX     100
-// #define BOREDOM_MAX     10
 #define C_TRUE          1
 #define C_FALSE         0
 #define HUNTER_WAIT     5000
@@ -58,6 +57,7 @@ struct EvidenceNode {
             EvidenceNode* head - pointer to head node
             EvidenceNode* tail - pointer to tail node
             int size - size of list
+            sem_t mutex - mutex for the list
 */
 struct EvidenceList{
   EvidenceNode* head;
@@ -76,17 +76,22 @@ struct EvidenceList{
             EvidenceList* evidence_list - pointer to the list of evidence the hunters have collected
             int fear - fear level
             int boredom - boredom level
+            pthread_t tid - thread id
+            char color[8] - color of the hunter's output
+            int* active_hunters - pointer to the number of active hunters
+            sem_t* active_hunters_mutex - pointer to the mutex for the number of active hunters
 */
 struct HunterType{
   RoomType* curr_room;
   EvidenceType evidence_type;
   char name[MAX_STR];
   EvidenceList* evidence_list;
-  HouseType* house;
   int fear;
   int boredom;
   pthread_t tid;
   char color[8];
+  int* active_hunters;
+  sem_t* active_hunters_mutex;
 };
 
 /*
@@ -124,6 +129,7 @@ struct RoomList{
             EvidenceList* evidence_left - linked list of evidence in the room
             HunterType hunters_in_room - collection of hunters in the room
             GhostType* ghost_in_room - pointer to the ghost in the room or NULL
+            sem_t mutex - mutex for the room
 */
 struct RoomType{
   char name[MAX_STR];
@@ -141,15 +147,18 @@ struct RoomType{
   Variables: 
             GhostClass ghost_type - enum type of ghost
             RoomType* current_room - pointer to current room
+            EvidenceList* evidence_list - pointer to the list of evidence the ghost can leave
             int boredom_timer - boredom level
+            pthread_t tid - thread id
+            int* active_hunters - pointer to the number of active hunters
 */
 struct GhostType{
   GhostClass ghost_class;
   RoomType* curr_room;
   EvidenceList evidence_list;
-  HouseType* house;
   int boredom;
   pthread_t pid;
+  int* active_hunters;
 };
 
 /*
@@ -159,12 +168,15 @@ struct GhostType{
             HunterType hunters[NUM_HUNTERS] - array of hunters
             RoomList* rooms - pointer to the map/rooms list
             EvidenceList* evidence_list - pointer to the list of evidence the hunters have collected
+            int active_hunters - number of active hunters
+            sem_t active_hunters_mutex - mutex for the number of active hunters
 */
 struct HouseType{
   HunterType hunters[NUM_HUNTERS];
   RoomList rooms;
   EvidenceList evidence_list;
   int active_hunters;
+  sem_t active_hunters_mutex;
 };
 
 // House Function Prototypes
@@ -182,6 +194,12 @@ void initHouse(HouseType* house);
     Input/Output: HouseType* house - pointer to the house to populate
 */
 void populateRooms(HouseType* house, const char* filename);
+/* 
+  Function: Replace Underscore With Space
+  Purpose:  Replaces all underscores in a string with spaces
+  Params:   
+    Input:  char* str - pointer to the string to replace underscores in
+*/
 void replaceUnderscoreWithSpace(char* str);
 /* 
   Function: Cleanup House
@@ -214,7 +232,7 @@ void initRoom(char* name, RoomType** room);
   Purpose:  Initializes a room and returns a pointer to it
   Params:   
     Input:  char* name - name of the room
-    Return: RoomType* - pointer to the room
+    Return: RoomType* - pointer to the room created
 */
 RoomType* createRoom(char* name);
 /* 
@@ -274,21 +292,23 @@ void cleanupRoomList(RoomList* list);
     Input:  RoomType* startingRoom - pointer to the room the hunter starts in (the van)
             EvidenceType evidenceType - type of evidence the hunter can collect
             EvidenceList* sharedEvidenceList - pointer to the shared evidence list
+            int* active_hunters - pointer to the number of active hunters
+            sem_t* mutex - pointer to the mutex for the number of active hunters
     Input/Output: HunterType* newHunter - pointer to the hunter to initialize
 */
-void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList* sharedEvidenceList, HouseType* newHouse, HunterType* newHunter);
+void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList* sharedEvidenceList, int* active_hunters, sem_t* mutex, HunterType* newHunter);
 /* 
   Function: Hunter Handler
   Purpose:  Handles the hunter's actions
   Params:   
-    Input:  void* arg - pointer to the hunter whos actions are being handled
+    Input:  void* hunter - pointer to the hunter whos actions are being handled
 */
-void *hunterHandler(void*);
+void *hunterHandler(void* arg);
 /* 
   Function: Hunter Move
   Purpose:  Moves a hunter to a random connected room
   Params:
-    Input:  HunterType* hunter - pointer to the hunter to move
+    Input/Output:  HunterType* hunter - pointer to the hunter to move
 */
 void hunterMove(HunterType* hunter);
 /* 
@@ -327,7 +347,7 @@ int hunterReview(HunterType* hunter);
   Params:   
     Input:  HunterType* hunter - pointer to the hunter thats exiting
 */
-void hunterExit (HunterType* hunter, HouseType* house);
+void hunterExit (HunterType* hunter);
 
 
 
@@ -337,9 +357,10 @@ void hunterExit (HunterType* hunter, HouseType* house);
   Purpose:  Initializes a ghost
   Params:   
     Input:  RoomType* startingRoom - pointer to the room the ghost starts in
+            int* active_hunters - pointer to the number of active hunters
     Input/Output: GhostType** ghost - pointer to the ghost to initialize
 */
-void initGhost(GhostType** ghost, RoomType* startingRoom, HouseType* newHouse);
+void initGhost(RoomType* startingRoom, int* active_hunters, GhostType** ghost);
 /* 
   Function: Ghost Handler
   Purpose:  Handles the ghost's actions
@@ -421,11 +442,46 @@ void cleanupEvidenceList(EvidenceList* list);
 
 
 // Helper Utilies
-int randInt(int,int); // Pseudo-random number generator function
-float randFloat(float, float); // Pseudo-random float generator function
-enum GhostClass randomGhost(); // Return a randomly selected a ghost type
-void ghostToString(enum GhostClass, char*); // Convert a ghost type to a string, stored in output paremeter
+/* 
+  Function: Random Integer
+  Purpose:  Returns a random integer between min and max
+  Params:   
+    Input:  int min - minimum value
+            int max - maximum value
+    Return: int - random integer
+*/
+int randInt(int,int);
+/* 
+  Function: Random Float
+  Purpose:  Returns a random float between min and max
+  Params:   
+    Input:  float min - minimum value
+            float max - maximum value
+    Return: float - random float
+*/
+float randFloat(float, float);
+/* 
+  Function: Random Ghost Class
+  Purpose:  Returns a random ghost type
+  Return:   enum GhostClass - random ghost type
+*/
+enum GhostClass randomGhost();
+/*
+  Function: Ghost To String
+  Purpose:  Convert a ghost type to a string
+  Input:    enum GhostClass - random ghost type
+  Output:   char* - string representation of the ghost type
+*/
+void ghostToString(enum GhostClass, char*);
+/*
+  Function: Evidence To String
+  Purpose:  Convert an evidence type to a string
+  Input:    enum EvidenceType - random evidence type
+  Output:   char* - string representation of the evidence type
+*/
 void evidenceToString(enum EvidenceType, char*); // Convert an evidence type to a string, stored in output parameter
+
+
 
 // Logging Utilities
 /* 
@@ -439,7 +495,7 @@ void evidenceToString(enum EvidenceType, char*); // Convert an evidence type to 
 void l_hunterInit(char* name, enum EvidenceType equipment, char* color);
 /* 
   Function: Log Hunter Move
-  Purpose:  Logs a hunter's move
+  Purpose:  Logs a hunter moving
   Params:   
     Input:  char* name - name of the hunter
             char* room - name of the room the hunter moved to
@@ -448,16 +504,16 @@ void l_hunterInit(char* name, enum EvidenceType equipment, char* color);
 void l_hunterMove(char* name, char* room, char* color);
 /* 
   Function: Log Hunter Review
-  Purpose:  Logs a hunter's review
+  Purpose:  Logs a hunter reviewing evidence
   Params:   
     Input:  char* name - name of the hunter
-            enum LoggerDetails reviewResult - whether or not the hunter found sufficient evidence
+            enum LoggerDetails result - whether or not the hunter found sufficient evidence
             char* color - color of the hunter`s output
 */
-void l_hunterReview(char* name, enum LoggerDetails reviewResult, char* color);
+void l_hunterReview(char* name, enum LoggerDetails result, char* color);
 /* 
   Function: Log Hunter Collect
-  Purpose:  Logs a hunter's collect
+  Purpose:  Logs a hunter collecting evidence
   Params:   
     Input:  char* name - name of the hunter
             enum EvidenceType evidence - type of evidence the hunter collected
@@ -473,9 +529,7 @@ void l_hunterCollect(char* name, enum EvidenceType evidence, char* room, char* c
             enum LoggerDetails reason - whether or not the hunter found sufficient evidence
             char* color - color of the hunter`s output
 */
-
 void l_hunterExit(char* name, enum LoggerDetails reason, char* color);
-void l_hunterCollectNone(char* hunter, char* room, char* color);
 /* 
   Function: Log Ghost Initialization
   Purpose:  Logs a ghost's initialization
@@ -483,10 +537,10 @@ void l_hunterCollectNone(char* hunter, char* room, char* color);
     Input:  enum GhostClass type - type of ghost
             char* room - name of the room the ghost starts in
 */
-void l_ghostInit(enum GhostClass type, char* room);
+void l_ghostInit(enum GhostClass ghost, char* room);
 /* 
   Function: Log Ghost Move
-  Purpose:  Logs a ghost's move
+  Purpose:  Logs a ghost moving
   Params:   
     Input:  char* room - name of the room the ghost moved to
             int success - whether or not the ghost was able to move to the room
@@ -494,12 +548,17 @@ void l_ghostInit(enum GhostClass type, char* room);
 void l_ghostMove(char* room, int success);
 /* 
   Function: Log Ghost Evidence
-  Purpose:  Logs a ghost's evidence
+  Purpose:  Logs a ghost leaving evidence
   Params:   
     Input:  enum EvidenceType evidence - type of evidence the ghost left
             char* room - name of the room the ghost left evidence in
 */
 void l_ghostEvidence(enum EvidenceType evidence, char* room);
+/* 
+  Function: Log Ghost Do Nothing
+  Purpose:  Logs a ghost doing nothing
+*/
+void l_ghostDoNothing();
 /* 
   Function: Log Ghost Exit
   Purpose:  Logs a ghost's exit

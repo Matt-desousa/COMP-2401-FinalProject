@@ -5,31 +5,43 @@ void initEvidenceList(EvidenceList* list) {
     list->head = NULL;
     list->tail = NULL;
     list->size = 0;
-    sem_init(&list->mutex, 0, 1); // initialize the mutex
+
+    // initialize the mutex
+    sem_init(&list->mutex, 0, 1); 
 }
 
 EvidenceNode* initEvidenceNode(EvidenceType data) {
-    EvidenceNode* newEvidenceNode = malloc(sizeof(EvidenceNode)); // allocate memory for the new node
-    newEvidenceNode->data = data; // set the data
+    // allocate memory for the new node
+    EvidenceNode* newEvidenceNode = malloc(sizeof(EvidenceNode)); 
+    newEvidenceNode->data = data;
+
+    // return the new node
+    return newEvidenceNode;
 }
 
 void addEvidence(EvidenceList* list, EvidenceType data) {
-    EvidenceNode* node = initEvidenceNode(data); // initialize the new node
+    // initialize the new node
+    EvidenceNode* node = initEvidenceNode(data); 
 
-    node->next = list->head; // set the next pointer to the current head
-    list->head = node; // set the head to the new node
+    // add the node to the head of the list
+    node->next = list->head;
+    list->head = node;
 
-    if (list->tail == NULL) { // if the list was empty, update the tail
+    // update the tail if the list was empty
+    if (list->tail == NULL) {
         list->tail = node;
     }
 
-    list->size++; // increment list size
+    // increment the size of the list
+    list->size++;
 }
 
 void initGhostEvidenceList(EvidenceList* evidence, GhostClass ghost) {
-    initEvidenceList(evidence); // initialize the list
+    // initialize the list
+    initEvidenceList(evidence);
 
-    switch(ghost) { // add the evidence based on the ghost type
+    // add the evidence based on the ghost type
+    switch(ghost) {
         case POLTERGEIST:
             addEvidence(evidence, EMF);
             addEvidence(evidence, TEMPERATURE);
@@ -50,29 +62,30 @@ void initGhostEvidenceList(EvidenceList* evidence, GhostClass ghost) {
             addEvidence(evidence, FINGERPRINTS);
             addEvidence(evidence, SOUND);
             break;
-        default:
-            
-            break;
     }
 }
 
 EvidenceType getRandomEvidence(EvidenceList* evidence_list) {
-    int rand_index = randInt(0, evidence_list->size); // get a random index
+    // get a random index
+    int rand_index = randInt(0, evidence_list->size);
     
+    // iterate to the random index
     EvidenceNode* curr_node = evidence_list->head;
-    for (int i = 0; i < rand_index; i++) { // iterate to the random index
+    for (int i = 0; i < rand_index; i++) {
         curr_node = curr_node->next;
     }
 
-    return curr_node->data; // return the data at the random index
+    // return the evidence type
+    return curr_node->data;
 }
 
 void cleanupEvidenceList(EvidenceList* list) {
+    // iterate through the list and free the nodes
     EvidenceNode* curr = list->head;
     EvidenceNode* next = NULL;
-    while(curr != NULL) { // iterate through the list and free each node
+    while(curr != NULL) {
         next = curr->next;
-        free(curr);
+        free(curr); // free the node
         curr = next;
     }
 }
