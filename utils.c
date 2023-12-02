@@ -87,3 +87,15 @@ void ghostToString(enum GhostClass ghost, char* buffer) {
         
     }
 }
+
+/* 
+    Returns the string with spaces instead of underscores
+        in: str - string with spaces instead of underscores
+*/
+void replaceUnderscoreWithSpace(char* str) {
+    for (int i = 0; str[i] != '\0'; i++) {
+        if (str[i] == '_') {
+            str[i] = ' ';
+        }
+    }
+}
