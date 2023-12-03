@@ -356,6 +356,14 @@ void hunterCollect(HunterType* hunter);
 int hunterReview(HunterType* hunter);
 
 /* 
+  Function: Change Equipment
+  Purpose:  Changes a hunter's evidence type if they are in the van
+  Params:   
+    Input:  HunterType* hunter - pointer to the hunter thats changing their evidence type
+*/
+void changeEquipment(HunterType* hunter);
+
+/* 
   Function: Hunter Exit
   Purpose:  Removes the hunter from their current room and logs their exit
   Params:   
@@ -577,6 +585,16 @@ void l_hunterReview(char* name, enum LoggerDetails result, char* color);
             char* color - color of the hunter`s output
 */
 void l_hunterCollect(char* name, enum EvidenceType evidence, char* room, char* color);
+
+/* 
+  Function: Log Hunter Change Evidence
+  Purpose:  Logs a hunter changing their evidence type
+  Params:   
+    Input:  char* hunter - name of the hunter
+            enum EvidenceType evidence - type of evidence the hunter changed to
+            char* color - color of the hunter`s output
+*/
+void l_hunterChangeEvidence(char* hunter, enum EvidenceType evidence, char* color);
 
 /* 
   Function: Log Hunter Exit

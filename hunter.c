@@ -60,6 +60,8 @@ void *hunterHandler(void* arg){
             break;
         }
 
+        changeEquipment(hunter); // change the hunter's equipment if they are in the van
+
         sleep(1); // sleep for 1 second
     }
 
@@ -205,6 +207,20 @@ int hunterReview(HunterType* hunter) {
     } else {
         l_hunterReview(hunter->name, LOG_INSUFFICIENT, hunter->color);
         return INSUFFICIENT;
+    }
+}
+
+void changeEquipment(HunterType* hunter) {
+    // generate a random number between 0 and 9
+    EvidenceType new_evidence_type = randInt(0, 4);
+    
+    // if the hunter is in the van or hallway and the new equipment is different from the current equipment
+    if ((strcmp(hunter->curr_room->name, "Van") == 0 || strcmp(hunter->curr_room->name, "Hallway") == 0) && new_evidence_type != hunter->evidence_type){
+        // change the hunter's equipment
+        hunter->evidence_type = new_evidence_type;
+
+        // log the event
+        l_hunterChangeEvidence(hunter->name, hunter->evidence_type, hunter->color);
     }
 }
 

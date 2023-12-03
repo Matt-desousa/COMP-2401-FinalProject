@@ -85,7 +85,7 @@ void printResults(HunterType* hunters, GhostType* ghost) {
     FILE* log_file = fopen(LOG_FILE, "a"); // open game_log.txt
 
     printf("\033[0m====================================\nAll done! Here are the results\n====================================\n");
-    fprintf(log_file, "[0m====================================\nAll done! Here are the results\n====================================\n");
+    fprintf(log_file, "====================================\nAll done! Here are the results\n====================================\n");
 
     char ghost_type[20];
     ghostToString(ghost->ghost_class, ghost_type);
@@ -97,17 +97,17 @@ void printResults(HunterType* hunters, GhostType* ghost) {
     for (int i = 0; i < NUM_HUNTERS; i++){
         if (hunters[i].fear >= FEAR_MAX) {
             printf("%s%4s ran away in fear.\n", hunters[i].color, hunters[i].name);
-            fprintf(log_file, "%s%4s ran away in fear.\n", hunters[i].color, hunters[i].name);
+            fprintf(log_file, "%4s ran away in fear.\n", hunters[i].name);
             ran_in_fear++;
         }
         else if (hunters[i].boredom >= BOREDOM_MAX) {
             printf("%s%4s got bored and left.\n", hunters[i].color, hunters[i].name);
-            fprintf(log_file, "%s%4s got bored and left.\n", hunters[i].color, hunters[i].name);
+            fprintf(log_file, "%4s got bored and left.\n", hunters[i].name);
             got_bored++;
         }
         else {
             printf("%s%4s found the ghost!\n", hunters[i].color, hunters[i].name);
-            fprintf(log_file, "%s%4s found the ghost!\n", hunters[i].color, hunters[i].name);
+            fprintf(log_file, "%4s found the ghost!\n", hunters[i].name);
             found_ghost++;
         }
     }

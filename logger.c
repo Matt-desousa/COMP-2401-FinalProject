@@ -83,6 +83,18 @@ void l_hunterCollect(char* hunter, enum EvidenceType evidence, char* room, char*
     fclose(log_file); // close file 
 }
 
+void l_hunterChangeEvidence(char* hunter, enum EvidenceType evidence, char* color) {
+    FILE* log_file = fopen(LOG_FILE, "a"); // open game_log.txt
+
+    if (!LOGGING) return;
+    char ev_str[MAX_STR];
+    evidenceToString(evidence, ev_str);
+    printf("%s[HUNTER CHANGE EQUIPMENT] [%s] changed equipment to [%s]\n", color, hunter, ev_str);
+
+    fprintf(log_file, "[HUNTER CHANGE EQUIPMENT] [%s] changed equipment to [%s]\n", hunter, ev_str); // append to game_log.txt
+    fclose(log_file); // close file 
+}
+
 void l_ghostMove(char* room, int success) {
     FILE* log_file = fopen(LOG_FILE, "a"); // open game_log.txt
 
