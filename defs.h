@@ -192,18 +192,13 @@ void initHouse(HouseType* house);
 
 /* 
   Function: Populate Rooms
-  Purpose:  Dynamically allocates several rooms and populates the provided house.
+  Purpose:  Dynamically allocates several rooms and populates the provided house (by reading a file).
   Params:   
     Input/Output: HouseType* house - pointer to the house to populate
+    Input: const char* file_name - file to be read
 */
-void populateRooms(HouseType* house, const char* filename);
-/* 
-  Function: Replace Underscore With Space
-  Purpose:  Replaces all underscores in a string with spaces
-  Params:   
-    Input:  char* str - pointer to the string to replace underscores in
-*/
-void replaceUnderscoreWithSpace(char* str);
+void populateRooms(HouseType* house, const char* file_name);
+
 /* 
   Function: Cleanup House
   Purpose:  Free all memory associated with a house
@@ -428,7 +423,7 @@ void initEvidenceList(EvidenceList* list);
         Input:  EvidenceType data - type of evidence
         Return: EvidenceNode* - pointer to the new evidence node
 */
-EvidenceNode* initEvidenceNode(EvidenceType data); // ??
+EvidenceNode* initEvidenceNode(EvidenceType data);
 
 /* 
   Function: Add Evidence
@@ -437,7 +432,7 @@ EvidenceNode* initEvidenceNode(EvidenceType data); // ??
     Input:  EvidenceList* list - pointer to the evidence list to add to
             EvidenceType data - type of evidence to add
 */
-void addEvidence(EvidenceList* list, EvidenceType data); // ??
+void addEvidence(EvidenceList* list, EvidenceType data);
 
 /* 
   Function: Initialize Ghost Evidence List
@@ -466,7 +461,7 @@ EvidenceType getRandomEvidence(EvidenceList* evidence_list);
 void cleanupEvidenceList(EvidenceList* list);
 
 
-// Helper Utilies
+// HELPER UTILITIES
 /* 
   Function: Random Integer
   Purpose:  Returns a random integer between min and max
@@ -476,6 +471,7 @@ void cleanupEvidenceList(EvidenceList* list);
     Return: int - random integer
 */
 int randInt(int,int);
+
 /* 
   Function: Random Float
   Purpose:  Returns a random float between min and max
@@ -485,12 +481,14 @@ int randInt(int,int);
     Return: float - random float
 */
 float randFloat(float, float);
+
 /* 
   Function: Random Ghost Class
   Purpose:  Returns a random ghost type
   Return:   enum GhostClass - random ghost type
 */
 enum GhostClass randomGhost();
+
 /*
   Function: Ghost To String
   Purpose:  Convert a ghost type to a string
@@ -498,6 +496,7 @@ enum GhostClass randomGhost();
   Output:   char* - string representation of the ghost type
 */
 void ghostToString(enum GhostClass, char*);
+
 /*
   Function: Evidence To String
   Purpose:  Convert an evidence type to a string
@@ -505,6 +504,23 @@ void ghostToString(enum GhostClass, char*);
   Output:   char* - string representation of the evidence type
 */
 void evidenceToString(enum EvidenceType, char*); // Convert an evidence type to a string, stored in output parameter
+
+/* 
+  Function: Replace Underscore With Space
+  Purpose:  Replaces all underscores in a string with spaces
+  Params:   
+    Input:  char* str - pointer to the string to replace underscores in
+*/
+void replaceUnderscoreWithSpace(char* str);
+
+/* 
+  Function: Find Room By Name
+  Purpose:  Finds a room in the house by name
+  Params:   
+    Input:  RoomList* list - list (house) to look through
+            const char* name - name of room to look for
+*/
+RoomType* findRoomByName(RoomList* list, const char* name);
 
 
 

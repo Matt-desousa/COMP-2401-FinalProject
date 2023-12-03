@@ -12,24 +12,34 @@ void initHouse(HouseType* house) {
     sem_init(&house->active_hunters_mutex, 0, 1);
 }
 
-void populateRooms(HouseType* house, const char* filename) {
-    FILE* file = fopen(filename, "r");
+void populateRooms(HouseType* house, const char* file_name) {
+    FILE* file = fopen(file_name, "r");
+    
+    char room1Name[MAX_STR];
+    char room2Name[MAX_STR];
 
-    char room1[MAX_STR];
-    char room2[MAX_STR];
+    while (fscanf(file, "%s %s", room1Name, room2Name) == 2) {
+        replaceUnderscoreWithSpace(room1Name);
+        replaceUnderscoreWithSpace(room2Name);
 
-    while (fscanf(file, "%s %s", room1, room2) == 2) {
-        // Replace underscores with spaces
-        replaceUnderscoreWithSpace(room1);
-        replaceUnderscoreWithSpace(room2);
+        // Check if the rooms are already added
+        RoomType* room1 = findRoomByName(&house->rooms, room1Name);
+        RoomType* room2 = findRoomByName(&house->rooms, room2Name);
 
-        RoomType* room1Ptr = createRoom(room1);
-        RoomType* room2Ptr = createRoom(room2);
+        // If not, create and add them to the house
+        if (room1 == NULL) {
+            room1 = createRoom(room1Name);
+            addRoom(&house->rooms, room1);
+        }
 
-        connectRooms(room1Ptr, room2Ptr);
+        if (room2 == NULL) {
+            room2 = createRoom(room2Name);
+            addRoom(&house->rooms, room2);
+        }
 
-        addRoom(&house->rooms, room1Ptr);
-        addRoom(&house->rooms, room2Ptr);
+        // Connect the rooms
+        connectRooms(room1, room2);
+        connectRooms(room2, room1);
     }
 
     fclose(file);
