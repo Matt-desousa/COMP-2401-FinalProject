@@ -1,4 +1,4 @@
-COMP2401 FINAL PROJECT
+COMP2401           FINAL PROJECT
 --------------------------------
            *AUTHORS* 
 Fatima Atweri      ID: 101259778
@@ -7,11 +7,11 @@ Matthew De Sousa   ID: 101266991
 
 *PURPOSE OF THIS PROJECT*
 The purpose of this project is to demonstrate a majority of the topics covered in this course which include:
--> Dynamically and Statically allocated memory
--> Linked Lists
--> Static Arrays of Pointers
--> Multi-threaded programming
--> Makefiles
+- Dynamically and Statically allocated memory
+- Linked Lists
+- Static Arrays of Pointers
+- Multi-threaded programming
+- Makefiles
 
 *FILES IN THIS PROJECT*
 README.txt   -> the file that you are currently reading
