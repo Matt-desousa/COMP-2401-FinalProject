@@ -44,6 +44,8 @@ void l_hunterExit(char* hunter, enum LoggerDetails reason, char* color) {
         default:
             printf("%s[UNKNOWN]\n", color);
     }
+
+    fclose(log_file);
 }
 
 void l_hunterReview(char* name, enum LoggerDetails result, char* color) {
