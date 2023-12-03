@@ -69,3 +69,14 @@ void replaceUnderscoreWithSpace(char* str) {
         }
     }
 }
+
+RoomType* findRoomByName(RoomList* list, const char* name) {
+    RoomNode* curr = list->head;
+    while (curr != NULL) {
+        if (strcmp(curr->data->name, name) == 0) {
+            return curr->data;
+        }
+        curr = curr->next;
+    }
+    return NULL;
+}
