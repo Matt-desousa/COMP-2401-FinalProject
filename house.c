@@ -12,8 +12,8 @@ void initHouse(HouseType* house) {
     sem_init(&house->active_hunters_mutex, 0, 1);
 }
 
-void populateRooms(HouseType* house, const char* filename) {
-    FILE* file = fopen(filename, "r");
+void populateRooms(HouseType* house, const char* file_name) {
+    FILE* file = fopen(file_name, "r");
     
     char room1Name[MAX_STR];
     char room2Name[MAX_STR];
