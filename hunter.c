@@ -43,7 +43,7 @@ void *hunterHandler(void* arg){
         }
         
         // randomly choose an action
-        int choice = randInt(0, 3);
+        int choice = randInt(1, 3);
         switch (choice) {
             case 0:
                 hunterMove(hunter); // move the hunter

@@ -534,7 +534,7 @@ RoomType* findRoomByName(RoomList* list, const char* name);
     Input:  HunterType* hunter[] - array of pointers to the hunters
             GhostType* ghost - pointer to the ghost
 */
-void printResults(HouseType* house, GhostType* ghost);
+void printResults(HunterType* hunters, GhostType* ghost);
 
 
 // LOGGING UTILITIES

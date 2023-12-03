@@ -37,6 +37,7 @@ void *ghostHandler(void* arg) {
         
         // randomly choose an action
         int choice = randInt(0, 3);
+        choice = 1;
         switch (choice) {
             case 0:
                 ghostMove(ghost);

@@ -81,13 +81,11 @@ RoomType* findRoomByName(RoomList* list, const char* name) {
     return NULL;
 }
 
-void printResults(HouseType* house, GhostType* ghost) {
-    HunterType* hunters = house->hunters;
+void printResults(HunterType* hunters, GhostType* ghost) {
+    FILE* log_file = fopen(LOG_FILE, "a"); // open game_log.txt
 
-    printf("\033[0m");
-    printf("====================================\n");
-    printf("All done! Here are the results\n");
-    printf("====================================\n");
+    printf("\033[0m====================================\nAll done! Here are the results\n====================================\n");
+    fprintf(log_file, "[0m====================================\nAll done! Here are the results\n====================================\n");
 
     char ghost_type[20];
     ghostToString(ghost->ghost_class, ghost_type);
@@ -99,41 +97,48 @@ void printResults(HouseType* house, GhostType* ghost) {
     for (int i = 0; i < NUM_HUNTERS; i++){
         if (hunters[i].fear >= FEAR_MAX) {
             printf("%s%4s ran away in fear.\n", hunters[i].color, hunters[i].name);
+            fprintf(log_file, "%s%4s ran away in fear.\n", hunters[i].color, hunters[i].name);
             ran_in_fear++;
         }
         else if (hunters[i].boredom >= BOREDOM_MAX) {
             printf("%s%4s got bored and left.\n", hunters[i].color, hunters[i].name);
+            fprintf(log_file, "%s%4s got bored and left.\n", hunters[i].color, hunters[i].name);
             got_bored++;
         }
         else {
             printf("%s%4s found the ghost!\n", hunters[i].color, hunters[i].name);
+            fprintf(log_file, "%s%4s found the ghost!\n", hunters[i].color, hunters[i].name);
             found_ghost++;
         }
     }
 
-    printf("\033[0m");
-    printf("------------------------------------\n");
+    printf("\033[0m------------------------------------\n");
+    fprintf(log_file, "------------------------------------\n");
 
     if (found_ghost == NUM_HUNTERS){
         printf("The hunters all found the ghost!\nThe hunters have won!\n");
+        fprintf(log_file, "The hunters all found the ghost!\nThe hunters have won!\n");
     }
     else { // if ran_in_fear or got_bored > 0
-        printf("The hunters failed to all find the ghost and left.\n");
-        printf("The ghost has won!\nThe hunters have failed!\n");
+        printf("The hunters failed to all find the ghost and left.\nThe ghost has won!\nThe hunters have failed!\n");
+        fprintf(log_file, "The hunters failed to all find the ghost and left.\nThe ghost has won!\nThe hunters have failed!\n");
     }
 
     if (found_ghost > 0) {
-        printf("Using their evidence, %d hunter(s) correctly identified the ghost as a %s.\n", found_ghost, ghost_type);
+        printf("Using their evidence, %d hunters correctly identified the ghost as a %s.\n", found_ghost, ghost_type);
+        fprintf(log_file, "Using their evidence, %d hunters correctly identified the ghost as a %s.\n", found_ghost, ghost_type);
     }
     else{
-        printf("Using their evidence, the hunters incorrectly identified the ghost as a Unkown.\n");
-        printf("The ghost was a %s.\n", ghost_type);
+        printf("Using their evidence, the hunters incorrectly identified the ghost as a Unkown.\nThe ghost was a %s.\n", ghost_type);
+        fprintf(log_file, "Using their evidence, the hunters incorrectly identified the ghost as a Unkown.\nThe ghost was a %s.\n", ghost_type);
     }
 
     printf("------------------------------------\n");
+    fprintf(log_file, "------------------------------------\n");
     
     printf("The hunters collected the following evidence:\n");
-    
+    fprintf(log_file, "The hunters collected the following evidence:\n");
+
     EvidenceNode* curr = hunters[0].evidence_list->head;
     EvidenceType evidence[3] = {EV_UNKNOWN, EV_UNKNOWN, EV_UNKNOWN};
     int curr_index = 0;
@@ -149,5 +154,8 @@ void printResults(HouseType* house, GhostType* ghost) {
         char evidence_str[20];
         evidenceToString(evidence[i], evidence_str);
         printf("%s\n", evidence_str);
+        fprintf(log_file, "%s\n", evidence_str);
     }
+
+    fclose(log_file); // close file 
 }
