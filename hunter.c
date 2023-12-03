@@ -173,7 +173,7 @@ int hunterReview(HunterType* hunter) {
     EvidenceList* sharedEvidenceList = hunter->evidence_list;
 
     // create an array to store the unique evidence types
-    EvidenceType uniqueEvidenceTypes[3] = {EV_UNKNOWN, EV_UNKNOWN, EV_UNKNOWN};
+    EvidenceType uniqueEvidenceTypes[3];
     int uniqueEvidenceCount = 0;
 
     // iterate through shared evidence list

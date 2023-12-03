@@ -9,6 +9,7 @@
 #define MAX_STR         64
 #define MAX_RUNS        50
 #define BOREDOM_MAX     100
+#define BOREDOM_MIN     10
 #define C_TRUE          1
 #define C_FALSE         0
 #define HUNTER_WAIT     5000
@@ -303,6 +304,7 @@ void cleanupRoomList(RoomList* list);
     Input/Output: HunterType* newHunter - pointer to the hunter to initialize
 */
 void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList* sharedEvidenceList, int* active_hunters, sem_t* mutex, HunterType* newHunter);
+
 /* 
   Function: Hunter Handler
   Purpose:  Handles the hunter's actions
@@ -310,6 +312,7 @@ void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList*
     Input:  void* hunter - pointer to the hunter whos actions are being handled
 */
 void *hunterHandler(void* arg);
+
 /* 
   Function: Hunter Move
   Purpose:  Moves a hunter to a random connected room
@@ -373,6 +376,7 @@ void hunterExit (HunterType* hunter);
     HouseType* newHouse - pointer to the shared house of the ghost and hunter
 */
 void initGhost(RoomType* startingRoom, int* active_hunters, GhostType** ghost);
+
 /* 
   Function: Ghost Handler
   Purpose:  Handles the ghost's actions
@@ -461,6 +465,7 @@ EvidenceType getRandomEvidence(EvidenceList* evidence_list);
 void cleanupEvidenceList(EvidenceList* list);
 
 
+
 // HELPER UTILITIES
 /* 
   Function: Random Integer
@@ -522,6 +527,14 @@ void replaceUnderscoreWithSpace(char* str);
 */
 RoomType* findRoomByName(RoomList* list, const char* name);
 
+/*
+  Function: Print Results
+  Purpose:  Prints the results of the game
+  Params:   
+    Input:  HunterType* hunter[] - array of pointers to the hunters
+            GhostType* ghost - pointer to the ghost
+*/
+void printResults(HouseType* house, GhostType* ghost);
 
 
 // LOGGING UTILITIES

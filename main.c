@@ -37,6 +37,8 @@ int main() {
     for(int i = 0; i < NUM_HUNTERS; i++) {
         pthread_join(house.hunters[i].tid, NULL);
     }
+    
+    printResults(&house, ghost);
 
     // Cleanup memory
     cleanupHouse(&house);
