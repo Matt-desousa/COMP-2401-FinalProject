@@ -211,7 +211,7 @@ int hunterReview(HunterType* hunter) {
 }
 
 void changeEquipment(HunterType* hunter) {
-    // generate a random number between 0 and 9
+    // generate a random number between 0 and 3
     EvidenceType new_evidence_type = randInt(0, 4);
     
     // if the hunter is in the van or hallway and the new equipment is different from the current equipment
