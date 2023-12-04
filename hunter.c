@@ -2,7 +2,7 @@
 #include <pthread.h>
 #include <semaphore.h>
 
-void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList* sharedEvidenceList, int* active_hunters, sem_t* mutex, HunterType* newHunter) {
+void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList* shared_evidence_list, int* active_hunters, sem_t* mutex, HunterType* newHunter) {
     // set the color of the hunter
     sprintf(newHunter->color, "\033[3%dm", evidenceType+1);
 
@@ -14,7 +14,7 @@ void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList*
     // initializing the hunter based on parameters
     newHunter->curr_room = startingRoom;
     newHunter->evidence_type = evidenceType;
-    newHunter->evidence_list = sharedEvidenceList;
+    newHunter->evidence_list = shared_evidence_list;
 
     // initialize the hunter's boredom and fear
     newHunter->fear = 0;
@@ -121,7 +121,7 @@ void removeHunterFromRoom(RoomType* room, HunterType* hunter) {
 
 void hunterCollect(HunterType* hunter) {
     // get the hunter's detection type
-    EvidenceType detectionType = hunter->evidence_type;
+    EvidenceType detect_type = hunter->evidence_type;
 
     // get the hunter's current room
     RoomType* current_room = hunter->curr_room;
@@ -136,7 +136,7 @@ void hunterCollect(HunterType* hunter) {
 
     // iterate through the evidence in the room
     while (curr_evidence != NULL) {
-        if (curr_evidence->data == detectionType) { // if the evidence type matches the hunter's detection type
+        if (curr_evidence->data == detect_type) { // if the evidence type matches the hunter's detection type
             if (prev_evidence == NULL) { // if the evidence to be removed is at the head of the list
                 current_room->evidence_in_room->head = curr_evidence->next; // update the head
                 if (current_room->evidence_in_room->head == NULL) { // if the removed evidence was the only evidence in the room
@@ -154,7 +154,7 @@ void hunterCollect(HunterType* hunter) {
             free(curr_evidence); // free the memory of the removed evidence node
 
             // logging hunter collecting evidence
-            l_hunterCollect(hunter->name, detectionType, current_room->name, hunter->color);
+            l_hunterCollect(hunter->name, detect_type, current_room->name, hunter->color);
 
             break; // break out of the loop
         }
@@ -173,14 +173,14 @@ int hunterReview(HunterType* hunter) {
     sem_wait(&hunter->evidence_list->mutex); // lock the shared evidence list
 
     // get the head of the shared evidence list
-    EvidenceList* sharedEvidenceList = hunter->evidence_list;
+    EvidenceList* shared_evidence_list = hunter->evidence_list;
 
     // create an array to store the unique evidence types
     EvidenceType uniqueEvidenceTypes[3];
     int uniqueEvidenceCount = 0;
 
     // iterate through shared evidence list
-    EvidenceNode* currentEvidence = sharedEvidenceList->head;
+    EvidenceNode* currentEvidence = shared_evidence_list->head;
     while (currentEvidence != NULL && uniqueEvidenceCount < 3) {
         // check if the evidence type already exists in the array if it does then set the flag to true
         int alreadyExists = C_FALSE;
