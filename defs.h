@@ -298,14 +298,14 @@ void cleanupRoomList(RoomList* list);
   Function: Initialize Hunter
   Purpose:  Initializes a hunter
   Params:   
-    Input:  RoomType* startingRoom - pointer to the room the hunter starts in (the van)
+    Input:  RoomType* start_room - pointer to the room the hunter starts in (the van)
             EvidenceType evidenceType - type of evidence the hunter can collect
-            EvidenceList* sharedEvidenceList - pointer to the shared evidence list
+            EvidenceList* shared_evidence_list - pointer to the shared evidence list
             int* active_hunters - pointer to the number of active hunters
             sem_t* mutex - pointer to the mutex for the number of active hunters
     Input/Output: HunterType* newHunter - pointer to the hunter to initialize
 */
-void initHunter(RoomType* startingRoom, EvidenceType evidenceType, EvidenceList* sharedEvidenceList, int* active_hunters, sem_t* mutex, HunterType* newHunter);
+void initHunter(RoomType* start_room, EvidenceType evidenceType, EvidenceList* shared_evidence_list, int* active_hunters, sem_t* mutex, HunterType* newHunter);
 
 /* 
   Function: Hunter Handler
@@ -380,12 +380,12 @@ void hunterExit (HunterType* hunter);
   Function: Initialize Ghost
   Purpose:  Initializes a ghost
   Params:   
-    Input:  RoomType* startingRoom - pointer to the room the ghost starts in
+    Input:  RoomType* start_room - pointer to the room the ghost starts in
             int* active_hunters - pointer to the number of active hunters
     Input/Output: GhostType** ghost - pointer to the ghost to initialize
     HouseType* newHouse - pointer to the shared house of the ghost and hunter
 */
-void initGhost(RoomType* startingRoom, int* active_hunters, GhostType** ghost);
+void initGhost(RoomType* start_room, int* active_hunters, GhostType** ghost);
 
 /* 
   Function: Ghost Handler
