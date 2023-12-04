@@ -15,25 +15,25 @@ void initHouse(HouseType* house) {
 void populateRooms(HouseType* house, const char* file_name) {
     FILE* file = fopen(file_name, "r");
     
-    char room1Name[MAX_STR];
-    char room2Name[MAX_STR];
+    char room1_name[MAX_STR];
+    char room2_name[MAX_STR];
 
-    while (fscanf(file, "%s %s", room1Name, room2Name) == 2) {
-        replaceUnderscoreWithSpace(room1Name);
-        replaceUnderscoreWithSpace(room2Name);
+    while (fscanf(file, "%s %s", room1_name, room2_name) == 2) {
+        replaceUnderscoreWithSpace(room1_name);
+        replaceUnderscoreWithSpace(room2_name);
 
         // Check if the rooms are already added
-        RoomType* room1 = findRoomByName(&house->rooms, room1Name);
-        RoomType* room2 = findRoomByName(&house->rooms, room2Name);
+        RoomType* room1 = findRoomByName(&house->rooms, room1_name);
+        RoomType* room2 = findRoomByName(&house->rooms, room2_name);
 
         // If not, create and add them to the house
         if (room1 == NULL) {
-            room1 = createRoom(room1Name);
+            room1 = createRoom(room1_name);
             addRoom(&house->rooms, room1);
         }
 
         if (room2 == NULL) {
-            room2 = createRoom(room2Name);
+            room2 = createRoom(room2_name);
             addRoom(&house->rooms, room2);
         }
 
