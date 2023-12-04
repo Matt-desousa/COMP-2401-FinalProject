@@ -6,8 +6,9 @@ int main() {
     // Initialize the random number generator
     srand(time(NULL));
     
+    // Reset the text file because it will be opened again by the logging functions
     FILE* log_file = fopen(LOG_FILE, "w");
-    fclose(log_file); // resets the text file because it will be opened again by the logging functions
+    fclose(log_file);
     
     // Initialize the house
     HouseType house;
