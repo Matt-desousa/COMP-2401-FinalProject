@@ -1,81 +1,84 @@
-[GHOST INIT] Ghost is a [Poltergeist] in room [Van]
+[GHOST INIT] Ghost is a [Phantom] in room [Kitchen]
 [HUNTER INIT] [1] is a [EMF] hunter
 [HUNTER INIT] [2] is a [TEMPERATURE] hunter
 [HUNTER INIT] [3] is a [FINGERPRINTS] hunter
 [HUNTER INIT] [4] is a [SOUND] hunter
-[GHOST EVIDENCE] Ghost left [FINGERPRINTS] in [Van]
-[HUNTER REVIEW] [1] reviewed evidence and found [INSUFFICIENT]
+[GHOST MOVE] Ghost has moved into [Living Room]
 [HUNTER REVIEW] [2] reviewed evidence and found [INSUFFICIENT]
-[HUNTER REVIEW] [3] reviewed evidence and found [INSUFFICIENT]
-[HUNTER REVIEW] [4] reviewed evidence and found [INSUFFICIENT]
+[HUNTER MOVE] [3] has moved into [Hallway]
+[HUNTER CHANGE EQUIPMENT] [3] changed equipment to [SOUND]
+[HUNTER MOVE] [4] has moved into [Hallway]
 [HUNTER CHANGE EQUIPMENT] [4] changed equipment to [EMF]
-[GHOST DO NOTHING] Ghost did nothing
-[HUNTER CHANGE EQUIPMENT] [1] changed equipment to [SOUND]
+[GHOST EVIDENCE] Ghost left [FINGERPRINTS] in [Living Room]
 [HUNTER REVIEW] [2] reviewed evidence and found [INSUFFICIENT]
-[HUNTER EVIDENCE] [3] found [FINGERPRINTS] in [Van] and [COLLECTED]
-[HUNTER CHANGE EQUIPMENT] [2] changed equipment to [SOUND]
 [HUNTER REVIEW] [4] reviewed evidence and found [INSUFFICIENT]
-[HUNTER CHANGE EQUIPMENT] [4] changed equipment to [SOUND]
-[GHOST EVIDENCE] Ghost left [EMF] in [Van]
-[HUNTER REVIEW] [1] reviewed evidence and found [INSUFFICIENT]
-[HUNTER CHANGE EQUIPMENT] [1] changed equipment to [EMF]
-[HUNTER CHANGE EQUIPMENT] [2] changed equipment to [TEMPERATURE]
-[HUNTER CHANGE EQUIPMENT] [4] changed equipment to [FINGERPRINTS]
-[HUNTER CHANGE EQUIPMENT] [3] changed equipment to [TEMPERATURE]
-[GHOST DO NOTHING] Ghost did nothing
-[HUNTER REVIEW] [1] reviewed evidence and found [INSUFFICIENT]
-[HUNTER CHANGE EQUIPMENT] [1] changed equipment to [FINGERPRINTS]
-[HUNTER CHANGE EQUIPMENT] [2] changed equipment to [EMF]
+[GHOST EVIDENCE] Ghost left [TEMPERATURE] in [Living Room]
+[HUNTER MOVE] [2] has moved into [Hallway]
 [HUNTER REVIEW] [4] reviewed evidence and found [INSUFFICIENT]
-[HUNTER CHANGE EQUIPMENT] [3] changed equipment to [EMF]
-[GHOST EVIDENCE] Ghost left [TEMPERATURE] in [Van]
-[HUNTER CHANGE EQUIPMENT] [1] changed equipment to [EMF]
-[HUNTER REVIEW] [2] reviewed evidence and found [INSUFFICIENT]
-[HUNTER CHANGE EQUIPMENT] [4] changed equipment to [TEMPERATURE]
-[HUNTER REVIEW] [3] reviewed evidence and found [INSUFFICIENT]
+[HUNTER REVIEW] [1] reviewed evidence and found [INSUFFICIENT]
 [GHOST DO NOTHING] Ghost did nothing
-[HUNTER EVIDENCE] [1] found [EMF] in [Van] and [COLLECTED]
-[HUNTER CHANGE EQUIPMENT] [1] changed equipment to [FINGERPRINTS]
-[HUNTER REVIEW] [2] reviewed evidence and found [INSUFFICIENT]
-[HUNTER CHANGE EQUIPMENT] [2] changed equipment to [TEMPERATURE]
-[HUNTER EVIDENCE] [4] found [TEMPERATURE] in [Van] and [COLLECTED]
-[HUNTER CHANGE EQUIPMENT] [4] changed equipment to [SOUND]
-[HUNTER REVIEW] [3] reviewed evidence and found [SUFFICIENT]
-[HUNTER EXIT] [3] exited because [EVIDENCE]
-[GHOST EVIDENCE] Ghost left [FINGERPRINTS] in [Van]
-[HUNTER EVIDENCE] [1] found [FINGERPRINTS] in [Van] and [COLLECTED]
-[HUNTER CHANGE EQUIPMENT] [1] changed equipment to [EMF]
-[HUNTER CHANGE EQUIPMENT] [2] changed equipment to [FINGERPRINTS]
-[HUNTER CHANGE EQUIPMENT] [4] changed equipment to [EMF]
-[GHOST EVIDENCE] Ghost left [TEMPERATURE] in [Van]
+[HUNTER MOVE] [2] has moved into [Bathroom]
+[HUNTER MOVE] [3] has moved into [Kitchen]
+[HUNTER MOVE] [1] has moved into [Hallway]
 [HUNTER CHANGE EQUIPMENT] [1] changed equipment to [TEMPERATURE]
-[HUNTER REVIEW] [2] reviewed evidence and found [SUFFICIENT]
-[HUNTER EXIT] [2] exited because [EVIDENCE]
-[HUNTER REVIEW] [4] reviewed evidence and found [SUFFICIENT]
-[HUNTER EXIT] [4] exited because [EVIDENCE]
-[GHOST EVIDENCE] Ghost left [FINGERPRINTS] in [Van]
-[HUNTER EVIDENCE] [1] found [TEMPERATURE] in [Van] and [COLLECTED]
-[HUNTER CHANGE EQUIPMENT] [1] changed equipment to [FINGERPRINTS]
-[GHOST EVIDENCE] Ghost left [TEMPERATURE] in [Van]
-[HUNTER EVIDENCE] [1] found [FINGERPRINTS] in [Van] and [COLLECTED]
+[GHOST EVIDENCE] Ghost left [SOUND] in [Living Room]
+[HUNTER REVIEW] [2] reviewed evidence and found [INSUFFICIENT]
+[HUNTER REVIEW] [3] reviewed evidence and found [INSUFFICIENT]
+[HUNTER REVIEW] [4] reviewed evidence and found [INSUFFICIENT]
+[HUNTER MOVE] [1] has moved into [Boys Bedroom]
+[GHOST DO NOTHING] Ghost did nothing
+[HUNTER REVIEW] [3] reviewed evidence and found [INSUFFICIENT]
+[HUNTER MOVE] [4] has moved into [Bathroom]
+[HUNTER REVIEW] [1] reviewed evidence and found [INSUFFICIENT]
+[GHOST DO NOTHING] Ghost did nothing
+[HUNTER MOVE] [3] has moved into [Living Room]
+[HUNTER MOVE] [1] has moved into [Hallway]
+[GHOST MOVE] Ghost has moved into [Kitchen]
+[HUNTER REVIEW] [2] reviewed evidence and found [INSUFFICIENT]
+[HUNTER EVIDENCE] [3] found [SOUND] in [Living Room] and [COLLECTED]
+[HUNTER REVIEW] [1] reviewed evidence and found [INSUFFICIENT]
+[GHOST DO NOTHING] Ghost did nothing
+[HUNTER MOVE] [4] has moved into [Hallway]
+[HUNTER CHANGE EQUIPMENT] [4] changed equipment to [FINGERPRINTS]
+[HUNTER REVIEW] [1] reviewed evidence and found [INSUFFICIENT]
+[GHOST DO NOTHING] Ghost did nothing
+[HUNTER REVIEW] [3] reviewed evidence and found [INSUFFICIENT]
+[HUNTER MOVE] [4] has moved into [Master Bedroom]
+[GHOST DO NOTHING] Ghost did nothing
+[HUNTER MOVE] [2] has moved into [Hallway]
+[HUNTER REVIEW] [3] reviewed evidence and found [INSUFFICIENT]
+[HUNTER REVIEW] [4] reviewed evidence and found [INSUFFICIENT]
+[HUNTER MOVE] [1] has moved into [Kitchen]
+[GHOST DO NOTHING] Ghost did nothing
+[HUNTER MOVE] [2] has moved into [Van]
+[HUNTER REVIEW] [3] reviewed evidence and found [INSUFFICIENT]
+[HUNTER REVIEW] [1] reviewed evidence and found [INSUFFICIENT]
+[GHOST EVIDENCE] Ghost left [FINGERPRINTS] in [Kitchen]
+[HUNTER REVIEW] [2] reviewed evidence and found [INSUFFICIENT]
+[HUNTER MOVE] [3] has moved into [Kitchen]
+[HUNTER MOVE] [4] has moved into [Hallway]
+[HUNTER MOVE] [1] has moved into [Hallway]
 [HUNTER CHANGE EQUIPMENT] [1] changed equipment to [SOUND]
-[GHOST EVIDENCE] Ghost left [EMF] in [Van]
-[HUNTER EXIT] [1] exited because [FEAR]
-[GHOST EXIT] Exited because [BORED]
-====================================
-All done! Here are the results
-====================================
-   1 ran away in fear.
-   2 found the ghost!
-   3 found the ghost!
-   4 found the ghost!
-------------------------------------
-The hunters failed to all find the ghost and left.
-The ghost has won!
-The hunters have failed!
-Using their evidence, 3 hunters correctly identified the ghost as a Poltergeist.
-------------------------------------
-The hunters collected the following evidence:
-FINGERPRINTS
-TEMPERATURE
-EMF
+[GHOST EVIDENCE] Ghost left [TEMPERATURE] in [Kitchen]
+[HUNTER REVIEW] [2] reviewed evidence and found [INSUFFICIENT]
+[HUNTER REVIEW] [1] reviewed evidence and found [INSUFFICIENT]
+[GHOST MOVE] Ghost has moved into [Garage]
+[HUNTER MOVE] [2] has moved into [Hallway]
+[HUNTER CHANGE EQUIPMENT] [2] changed equipment to [FINGERPRINTS]
+[HUNTER REVIEW] [3] reviewed evidence and found [INSUFFICIENT]
+[HUNTER MOVE] [1] has moved into [Van]
+[HUNTER CHANGE EQUIPMENT] [1] changed equipment to [FINGERPRINTS]
+[GHOST EVIDENCE] Ghost left [SOUND] in [Garage]
+[HUNTER REVIEW] [3] reviewed evidence and found [INSUFFICIENT]
+[HUNTER MOVE] [4] has moved into [Van]
+[HUNTER CHANGE EQUIPMENT] [4] changed equipment to [SOUND]
+[HUNTER MOVE] [1] has moved into [Hallway]
+[HUNTER CHANGE EQUIPMENT] [1] changed equipment to [SOUND]
+[GHOST EVIDENCE] Ghost left [TEMPERATURE] in [Garage]
+[HUNTER REVIEW] [4] reviewed evidence and found [INSUFFICIENT]
+[GHOST DO NOTHING] Ghost did nothing
+[HUNTER REVIEW] [3] reviewed evidence and found [INSUFFICIENT]
+[HUNTER MOVE] [4] has moved into [Hallway]
+[HUNTER REVIEW] [1] reviewed evidence and found [INSUFFICIENT]
+[GHOST MOVE] Ghost has moved into [Utility Room]
+[HUNTER MOVE] [2] has moved into [Van]
