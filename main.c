@@ -3,27 +3,28 @@
 #include <semaphore.h>
 
 int main() {
-    // Initialize the random number generator
+    // initialize the random number generator
     srand(time(NULL));
     
+    // reset the text file because it will be opened again by the logging functions
     FILE* log_file = fopen(LOG_FILE, "w");
-    fclose(log_file); // resets the text file because it will be opened again by the logging functions
+    fclose(log_file);
     
-    // Initialize the house
+    // initialize the house
     HouseType house;
     initHouse(&house);
     populateRooms(&house, "map.txt");
 
-    // Initialize the ghost
+    // initialize the ghost
     GhostType* ghost;
     initGhost(getRandomRoom(&(house.rooms), 1), &(house.active_hunters), &ghost);
 
-    // Initialize hunters
+    // initialize hunters
     for(int i = 0; i < NUM_HUNTERS; i++) {
         initHunter(house.rooms.head->data, i, &house.evidence_list, &(house.active_hunters), &(house.active_hunters_mutex), &house.hunters[i]);
     }
 
-    // Start the game
+    // start the game
     pthread_create(&ghost->pid, NULL, ghostHandler, ghost);
 
     for(int i = 0; i < NUM_HUNTERS; i++) {
@@ -32,14 +33,14 @@ int main() {
 
     pthread_join(ghost->pid, NULL);
 
-    // End the game
+    // end the game
     for(int i = 0; i < NUM_HUNTERS; i++) {
         pthread_join(house.hunters[i].tid, NULL);
     }
     
     printResults(house.hunters, ghost);
 
-    // Cleanup memory
+    // cleanup memory
     cleanupHouse(&house);
     cleanupGhost(ghost);
 
