@@ -2,13 +2,13 @@
 #include <pthread.h>
 #include <semaphore.h>
 
-void initGhost(RoomType* startingRoom, int* active_hunters, GhostType** ghost) {
+void initGhost(RoomType* start_room, int* active_hunters, GhostType** ghost) {
     *ghost = malloc(sizeof(GhostType)); // allocate memory for the ghost
 
     (*ghost)->ghost_class = randomGhost(); // set the ghost class
 
     // initialize the ghost's current room
-    (*ghost)->curr_room = startingRoom;
+    (*ghost)->curr_room = start_room;
     (*ghost)->curr_room->ghost_in_room = *ghost;
 
     // initialize the ghost's evidence list
