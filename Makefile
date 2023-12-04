@@ -8,7 +8,7 @@ OBJS = $(SRCS:.c=.o)
 
 # gcc -o fp main.c house.c logger.c utils.c room.c evidence.c hunter.c ghost.c -pthread
 # executable
-TARGET = fp
+TARGET = final_project
 
 # Targets
 all: $(TARGET)

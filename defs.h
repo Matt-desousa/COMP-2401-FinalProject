@@ -20,6 +20,7 @@
 
 #define LOG_FILE        "game_log.txt"
 
+// Defs for Sufficient/Insufficient evidence
 #define SUFFICIENT      1
 #define INSUFFICIENT    0
 
@@ -131,6 +132,7 @@ struct RoomList{
             RoomList* connected_rooms - linked list of connected rooms
             EvidenceList* evidence_left - linked list of evidence in the room
             HunterType hunters_in_room - collection of hunters in the room
+            int num_hunters - number of hunters in the room
             GhostType* ghost_in_room - pointer to the ghost in the room or NULL
             sem_t mutex - mutex for the room
 */

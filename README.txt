@@ -37,7 +37,7 @@ make
 
 *RUNNING INSTRUCTIONS*
 to run, type in command:
-./fp
+./final_project
 
 *HOW TO USE (OR HOW THE PROGRAM RUNS)*
 once the program is running, a ghost will be initialized and you will be asked to type in the names of four hunters.

@@ -16,8 +16,7 @@ int main() {
 
     // Initialize the ghost
     GhostType* ghost;
-    initGhost(house.rooms.head->data, &(house.active_hunters), &ghost);
-    // initGhost(getRandomRoom(&(house.rooms), 1), &(house.active_hunters), &ghost);
+    initGhost(getRandomRoom(&(house.rooms), 1), &(house.active_hunters), &ghost);
 
     // Initialize hunters
     for(int i = 0; i < NUM_HUNTERS; i++) {
@@ -26,10 +25,10 @@ int main() {
 
     // Start the game
     pthread_create(&ghost->pid, NULL, ghostHandler, ghost);
-    pthread_create(&house.hunters[0].tid, NULL, hunterHandler, &house.hunters[0]);
-    pthread_create(&house.hunters[1].tid, NULL, hunterHandler, &house.hunters[1]);
-    pthread_create(&house.hunters[2].tid, NULL, hunterHandler, &house.hunters[2]);
-    pthread_create(&house.hunters[3].tid, NULL, hunterHandler, &house.hunters[3]);
+
+    for(int i = 0; i < NUM_HUNTERS; i++) {
+        pthread_create(&house.hunters[i].tid, NULL, hunterHandler, &house.hunters[i]);
+    }
 
     pthread_join(ghost->pid, NULL);
 

@@ -37,7 +37,6 @@ void *ghostHandler(void* arg) {
         
         // randomly choose an action
         int choice = randInt(0, 3);
-        choice = 1;
         switch (choice) {
             case 0:
                 ghostMove(ghost);
@@ -67,8 +66,7 @@ void ghostMove(GhostType* ghost) {
     // if the new room has a hunter in it then do nothing
     if (new_room->num_hunters > 0) {
         // Do nothing.
-    //    l_ghostDoNothing();
-        l_ghostMove(ghost->curr_room->name, 0);
+        l_ghostDoNothing();
         return;
     }
 

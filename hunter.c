@@ -43,7 +43,7 @@ void *hunterHandler(void* arg){
         }
         
         // randomly choose an action
-        int choice = randInt(1, 3);
+        int choice = randInt(0, 3);
         switch (choice) {
             case 0:
                 hunterMove(hunter); // move the hunter
@@ -59,8 +59,6 @@ void *hunterHandler(void* arg){
         if (sufficient == SUFFICIENT) { // if the hunter has collected sufficient evidence then exit
             break;
         }
-
-        changeEquipment(hunter); // change the hunter's equipment if they are in the van
 
         sleep(1); // sleep for 1 second
     }
@@ -94,6 +92,9 @@ void hunterMove(HunterType* hunter) {
 
     // logging hunter movement
     l_hunterMove(hunter->name, hunter->curr_room->name, hunter->color);
+
+    // change the hunter's equipment if they are in the van
+    changeEquipment(hunter);
 }
 
 void addHunterToRoom(RoomType* room, HunterType* hunter) {
@@ -211,17 +212,21 @@ int hunterReview(HunterType* hunter) {
 }
 
 void changeEquipment(HunterType* hunter) {
-    // generate a random number between 0 and 9
-    EvidenceType new_evidence_type = randInt(0, 4);
-    
-    // if the hunter is in the van or hallway and the new equipment is different from the current equipment
-    if ((strcmp(hunter->curr_room->name, "Van") == 0 || strcmp(hunter->curr_room->name, "Hallway") == 0) && new_evidence_type != hunter->evidence_type){
-        // change the hunter's equipment
-        hunter->evidence_type = new_evidence_type;
+    // 33% chance to change equipment
+    if (randInt(0, 3) < 2){
+        // generate a random number between 0 and 3
+        EvidenceType new_evidence_type = randInt(0, 4);
+        
+        // if the hunter is in the van or hallway and the new equipment is different from the current equipment
+        if ((strcmp(hunter->curr_room->name, "Van") == 0 || strcmp(hunter->curr_room->name, "Hallway") == 0) && new_evidence_type != hunter->evidence_type){
+            // change the hunter's equipment
+            hunter->evidence_type = new_evidence_type;
 
-        // log the event
-        l_hunterChangeEvidence(hunter->name, hunter->evidence_type, hunter->color);
+            // log the event
+            l_hunterChangeEvidence(hunter->name, hunter->evidence_type, hunter->color);
+        }
     }
+    
 }
 
 void hunterExit(HunterType* hunter) {
